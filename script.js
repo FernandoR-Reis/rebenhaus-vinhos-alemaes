@@ -1,9 +1,11 @@
 (function() {
+  // v2 isolates the current boutique collection schema from older local data used before the dedicated /produtos and /admin pages.
   var STORAGE_KEY_PRODUCTS = 'rebenhaus_products_v2';
   var STORAGE_KEY_ADMIN_AUTH = 'rebenhaus_admin_auth_v1';
   var ADMIN_PASSWORD = '0812';
   var MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
   var WHATSAPP_NUMBER = '5512974019009';
+  var GOLD_BADGE_PATTERN = /popular|curadoria|editorial/i;
   var currentPage = document.body ? (document.body.getAttribute('data-page') || 'home') : 'home';
   var currentDepth = document.body ? Math.max(0, parseInt(document.body.getAttribute('data-depth'), 10) || 0) : 0;
   var basePrefix = currentDepth ? new Array(currentDepth + 1).join('../') : './';
@@ -158,7 +160,7 @@
   function buildProductCard(product, index) {
     var price = Number(product.preco || 0);
     var stock = Number(product.estoque || 0);
-    var badgeClass = /popular|curadoria|editorial/i.test(product.destaque || '') ? ' gold' : '';
+    var badgeClass = GOLD_BADGE_PATTERN.test(product.destaque || '') ? ' gold' : '';
     var whatsappMessage = 'Olá, gostaria de receber detalhes sobre o rótulo ' + product.nome + '.';
     var imageMarkup = product.imagem
       ? '<img src="' + escapeHtml(product.imagem) + '" alt="' + escapeHtml(product.nome) + '" loading="lazy" class="product-photo">'
