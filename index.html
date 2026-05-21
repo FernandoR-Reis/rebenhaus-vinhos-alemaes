@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rebenhaus — Vinhos Alemães Premium</title>
+<meta name="description" content="Curadoria exclusiva de vinhos alemães. Rótulos selecionados para quem busca experiências sofisticadas, autênticas e memoráveis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============================================
+     AGE VERIFICATION GATE
+============================================ -->
+<div class="age-gate" id="ageGate">
+  <div class="age-gate-box">
+    <div class="age-gate-logo">Reben<span>haus</span></div>
+    <div class="age-gate-line"></div>
+    <h2 class="age-gate-title">Verificação de Idade</h2>
+    <p class="age-gate-text">Este site contém bebidas alcoólicas. Por favor, confirme que você tem 18 anos ou mais para continuar.</p>
+    <div class="age-gate-btns">
+      <button class="age-yes" id="ageYesBtn">Tenho 18+</button>
+      <button class="age-no" id="ageNoBtn">Não tenho</button>
+    </div>
+    <p class="age-warning">Beba com moderação. Proibida a venda para menores.</p>
+  </div>
+</div>
+
+<!-- ============================================
+     ANNOUNCEMENT BAR
+============================================ -->
+<div class="announcement">
+  ✦ Frete grátis em todo o Brasil &nbsp;·&nbsp; <span>3% de desconto no Pix</span> &nbsp;·&nbsp; Curadoria exclusiva de vinhos alemães ✦
+</div>
+
+<!-- ============================================
+     NAVEGAÇÃO
+============================================ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a href="https://rebenhaus.com.br" class="nav-logo">Reben<span>haus</span></a>
+
+    <ul class="nav-links">
+      <li><a href="https://rebenhaus.com.br/produtos/">Produtos</a></li>
+      <li><a href="https://rebenhaus.com.br/essencial/">Essencial</a></li>
+      <li><a href="https://rebenhaus.com.br/selecao/">Seleção</a></li>
+      <li><a href="https://rebenhaus.com.br/colecionavel/">Colecionável</a></li>
+      <li><a href="https://rebenhaus.com.br/quem-somos/">Nossa história</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="https://wa.me/5512974019009" class="btn-cta-nav" target="_blank">Falar com especialista</a>
+      <a href="https://rebenhaus.com.br/" class="nav-cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-dot">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================
+     HERO
+============================================ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-texture"></div>
+
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-tag">
+        <div class="hero-tag-line"></div>
+        <span class="hero-tag-text">Importadora especializada · Curadoria exclusiva</span>
+      </div>
+
+      <h1 class="hero-h1">
+        Os vinhos alemães
+        <em>que o Brasil ainda<br>não descobriu.</em>
+      </h1>
+
+      <p class="hero-sub">
+        Rótulos selecionados para quem busca experiências sofisticadas, autênticas e memoráveis. Da tradição das regiões do Nahe e Pfalz, direto para a sua mesa.
+      </p>
+
+      <div class="hero-actions">
+        <a href="https://rebenhaus.com.br/produtos/" class="btn-primary">Explorar coleção</a>
+        <a href="https://wa.me/5512974019009" class="btn-ghost" target="_blank">Falar com especialista</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="wine-bottle-container">
+        <div class="wine-bottle-glow"></div>
+        <!-- SVG Wine Bottle Illustration -->
+        <svg class="wine-bottle-svg" viewBox="0 0 280 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Glow effect -->
+          <ellipse cx="140" cy="300" rx="80" ry="120" fill="rgba(184,145,58,0.08)"/>
+
+          <!-- Bottle body -->
+          <path d="M100 180 Q95 200 95 240 L95 400 Q95 420 110 428 L170 428 Q185 420 185 400 L185 240 Q185 200 180 180 L160 160 L160 80 L120 80 L120 160 Z"
+                fill="#1a2e1e" stroke="rgba(184,145,58,0.3)" stroke-width="1"/>
+
+          <!-- Bottle glass sheen -->
+          <path d="M108 240 Q106 300 106 380" stroke="rgba(255,255,255,0.08)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M116 200 Q113 240 113 320" stroke="rgba(255,255,255,0.05)" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- Wine color inside -->
+          <path d="M99 290 L99 398 Q99 416 113 424 L167 424 Q181 416 181 398 L181 290 Z"
+                fill="#5c1a28" opacity="0.7"/>
+
+          <!-- Label area -->
+          <rect x="102" y="295" width="76" height="100" rx="3" fill="rgba(247,243,236,0.95)"/>
+
+          <!-- Label content -->
+          <rect x="107" y="301" width="66" height="88" rx="2" fill="none" stroke="rgba(184,145,58,0.6)" stroke-width="0.8"/>
+          <!-- Gold top bar -->
+          <rect x="107" y="301" width="66" height="14" rx="2" fill="rgba(184,145,58,0.15)"/>
+
+          <text x="140" y="311" text-anchor="middle" fill="#b8913a" font-family="Georgia,serif" font-size="7" font-weight="500" letter-spacing="2">REBENHAUS</text>
+          <text x="140" y="328" text-anchor="middle" fill="#0e0c0a" font-family="Georgia,serif" font-size="12" font-weight="300">Riesling</text>
+          <text x="140" y="341" text-anchor="middle" fill="#3a342e" font-family="Georgia,serif" font-size="7" font-style="italic">Nahe • 2023</text>
+
+          <!-- Divider line -->
+          <line x1="115" y1="347" x2="165" y2="347" stroke="rgba(184,145,58,0.35)" stroke-width="0.5"/>
+
+          <text x="140" y="360" text-anchor="middle" fill="#5c1a28" font-family="Georgia,serif" font-size="8" font-style="italic">Qualitätswein</text>
+          <text x="140" y="375" text-anchor="middle" fill="#3a342e" font-family="sans-serif" font-size="6.5" letter-spacing="0.5">750ml · 11% vol.</text>
+
+          <!-- Neck label -->
+          <rect x="118" y="120" width="44" height="48" rx="2" fill="rgba(247,243,236,0.9)"/>
+          <rect x="118" y="120" width="44" height="48" rx="2" fill="none" stroke="rgba(184,145,58,0.4)" stroke-width="0.7"/>
+          <text x="140" y="134" text-anchor="middle" fill="#b8913a" font-family="Georgia,serif" font-size="6" letter-spacing="2">PROST</text>
+          <path d="M126 140 Q140 148 154 140" stroke="#b8913a" stroke-width="0.8" fill="none"/>
+
+          <!-- Capsule (foil top) -->
+          <rect x="116" y="78" width="48" height="44" rx="4" fill="#b8913a" opacity="0.85"/>
+          <rect x="124" y="82" width="32" height="2" rx="1" fill="rgba(255,255,255,0.2)"/>
+          <rect x="120" y="86" width="40" height="1" rx="0.5" fill="rgba(255,255,255,0.1)"/>
+
+          <!-- Cork line -->
+          <line x1="120" y1="80" x2="160" y2="80" stroke="rgba(184,145,58,0.4)" stroke-width="0.5"/>
+
+          <!-- Decorative elements - floating leaves -->
+          <ellipse cx="60" cy="200" rx="18" ry="9" fill="rgba(27,46,30,0.4)" transform="rotate(-30 60 200)"/>
+          <ellipse cx="220" cy="260" rx="14" ry="7" fill="rgba(27,46,30,0.3)" transform="rotate(20 220 260)"/>
+          <ellipse cx="55" cy="320" rx="12" ry="6" fill="rgba(27,46,30,0.25)" transform="rotate(-15 55 320)"/>
+
+          <!-- Small grapes -->
+          <circle cx="52" cy="195" r="4" fill="rgba(92,26,40,0.4)"/>
+          <circle cx="59" cy="190" r="4" fill="rgba(92,26,40,0.35)"/>
+          <circle cx="48" cy="203" r="3.5" fill="rgba(92,26,40,0.3)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Descobrir</span>
+  </div>
+</section>
+
+<!-- ============================================
+     TRUST BAR
+============================================ -->
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <div class="trust-item">
+      <span class="trust-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </span>
+      <div class="trust-text"><strong>Curadoria Rigorosa</strong>Seleção especializada de rótulos</div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </span>
+      <div class="trust-text"><strong>Frete Grátis</strong>Em todo o território nacional</div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </span>
+      <div class="trust-text"><strong>Paixão Genuína</strong>10 anos imersos na cultura alemã</div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </span>
+      <div class="trust-text"><strong>Atendimento Premium</strong>Especialista disponível via WhatsApp</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     POR QUE VINHO ALEMÃO?
+============================================ -->
+<section class="section-why" id="porque">
+  <div class="container">
+    <div class="section-header" data-anim>
+      <span class="section-label">Proposta única</span>
+      <h2 class="section-title">Por que vinho <em>alemão?</em></h2>
+      <p class="section-desc">Um universo vitivinícola sofisticado, ainda pouco explorado no Brasil — e perfeitamente adequado ao nosso estilo de vida.</p>
+    </div>
+
+    <div class="why-grid">
+      <div class="why-card" data-anim data-anim-delay="1">
+        <div class="why-icon-wrap">
+          <svg class="why-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </div>
+        <h3 class="why-title">Leveza ideal para o clima tropical</h3>
+        <p class="why-text">Os brancos alemães possuem frescor e acidez viva que os tornam companheiros perfeitos para o verão brasileiro. Nada de vinhos pesados no calor — aqui é elegância e refrescância.</p>
+      </div>
+
+      <div class="why-card" data-anim data-anim-delay="2">
+        <div class="why-icon-wrap">
+          <svg class="why-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <h3 class="why-title">Tradição e terroir únicos</h3>
+        <p class="why-text">Regiões como Nahe e Pfalz produzem vinhos com personalidade mineral distinta. Solo, clima e técnicas milenares se unem para criar rótulos que nenhuma outra região do mundo consegue replicar.</p>
+      </div>
+
+      <div class="why-card" data-anim data-anim-delay="3">
+        <div class="why-icon-wrap">
+          <svg class="why-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6H5a2 2 0 00-2 2v3a2 2 0 002 2h13l4-3.5L18 6z"/><path d="M12 13v8"/><path d="M12 3v3"/></svg>
+        </div>
+        <h3 class="why-title">Harmonização com a gastronomia brasileira</h3>
+        <p class="why-text">Da moqueca ao sushi, do churrasco ao camarão nordestino. A acidez e leveza dos alemães dialogam naturalmente com os sabores vibrantes da cozinha brasileira.</p>
+      </div>
+
+      <div class="why-card" data-anim data-anim-delay="4">
+        <div class="why-icon-wrap">
+          <svg class="why-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        </div>
+        <h3 class="why-title">Exclusividade e descoberta</h3>
+        <p class="why-text">Enquanto todo mundo bebe os mesmos rótulos de sempre, você terá acesso a uma curadoria que o mercado brasileiro ainda não conhece. Seja o primeiro a descobrir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     COLEÇÃO EM DESTAQUE
+============================================ -->
+<section class="section-collection" id="colecao">
+  <div class="container">
+    <div class="collection-header" data-anim>
+      <div class="collection-header-text">
+        <span class="section-label">Vinhos selecionados</span>
+        <h2 class="section-title">Destaques da <em>coleção</em></h2>
+      </div>
+      <a href="https://rebenhaus.com.br/produtos/" class="link-all">Ver todos os rótulos</a>
+    </div>
+
+    <div class="products-grid">
+
+      <!-- Produto 1: Riesling -->
+      <a href="https://rebenhaus.com.br/produtos/riesling/" class="product-card" data-anim data-anim-delay="1">
+        <div class="product-img-wrap">
+          <div class="product-img-placeholder">
+            <div class="css-bottle">
+              <div class="css-bottle-neck"></div>
+              <div class="css-bottle-shoulder"></div>
+              <div class="css-bottle-body"></div>
+            </div>
+          </div>
+          <div class="product-badge gold">Mais popular</div>
+          <div class="product-hover-cta">Adicionar ao carrinho</div>
+        </div>
+        <div class="product-info">
+          <span class="product-region">Nahe · Branco · Suave</span>
+          <h3 class="product-name">St. Michael Riesling Nahe 2023</h3>
+          <p class="product-notes">Notas cítricas vibrantes, mineralidade elegante e final refrescante.</p>
+          <div class="product-pairing">
+            <span class="pairing-label">Harmoniza:</span>
+            <span>Frutos do mar · Sushi · Peixe grelhado</span>
+          </div>
+          <div class="product-footer">
+            <div>
+              <span class="product-price">R$124,90</span>
+              <span class="product-price-pix">R$121,15 no Pix</span>
+            </div>
+            <button class="btn-add" aria-label="Adicionar ao carrinho">+</button>
+          </div>
+        </div>
+      </a>
+
+      <!-- Produto 2: Pinot Noir Villa Wolf -->
+      <a href="https://rebenhaus.com.br/produtos/vinho-tinto-villa-wolf-pinot-noir-seco-2024-11lvo/" class="product-card" data-anim data-anim-delay="2">
+        <div class="product-img-wrap">
+          <div class="product-img-placeholder">
+            <div class="css-bottle">
+              <div class="css-bottle-neck"></div>
+              <div class="css-bottle-shoulder"></div>
+              <div class="css-bottle-body"></div>
+            </div>
+          </div>
+          <div class="product-badge">Tinto elegante</div>
+          <div class="product-hover-cta">Adicionar ao carrinho</div>
+        </div>
+        <div class="product-info">
+          <span class="product-region">Pfalz · Tinto · Seco</span>
+          <h3 class="product-name">Villa Wolf Pinot Noir Pfalz 2024</h3>
+          <p class="product-notes">Cereja fresca, framboesa e especiarias sutis. Taninos sedosos e corpo médio.</p>
+          <div class="product-pairing">
+            <span class="pairing-label">Harmoniza:</span>
+            <span>Churrasco · Pato · Queijos macios</span>
+          </div>
+          <div class="product-footer">
+            <div>
+              <span class="product-price">R$147,30</span>
+              <span class="product-price-pix">R$142,88 no Pix</span>
+            </div>
+            <button class="btn-add" aria-label="Adicionar ao carrinho">+</button>
+          </div>
+        </div>
+      </a>
+
+      <!-- Produto 3: Pinot Blanc -->
+      <a href="https://rebenhaus.com.br/produtos/vinho-branco-st-michael-pinot-blanc-nahe-2021/" class="product-card" data-anim data-anim-delay="3">
+        <div class="product-img-wrap">
+          <div class="product-img-placeholder">
+            <div class="css-bottle">
+              <div class="css-bottle-neck"></div>
+              <div class="css-bottle-shoulder"></div>
+              <div class="css-bottle-body"></div>
+            </div>
+          </div>
+          <div class="product-badge gold">Curadoria</div>
+          <div class="product-hover-cta">Adicionar ao carrinho</div>
+        </div>
+        <div class="product-info">
+          <span class="product-region">Nahe · Branco · Semi-seco</span>
+          <h3 class="product-name">St. Michael Pinot Blanc Nahe 2021</h3>
+          <p class="product-notes">Floral e elegante, com frescor perfeito para o clima tropical.</p>
+          <div class="product-pairing">
+            <span class="pairing-label">Harmoniza:</span>
+            <span>Moqueca · Camarão · Saladas</span>
+          </div>
+          <div class="product-footer">
+            <div>
+              <span class="product-price">R$115,90</span>
+              <span class="product-price-pix">R$112,42 no Pix</span>
+            </div>
+            <button class="btn-add" aria-label="Adicionar ao carrinho">+</button>
+          </div>
+        </div>
+      </a>
+
+      <!-- Produto 4: Gewurztraminer -->
+      <a href="https://rebenhaus.com.br/produtos/vinho-branco-villa-wolf-gewuertztraminer-pfalz-semi-seco-2024-7wrks/" class="product-card" data-anim data-anim-delay="4">
+        <div class="product-img-wrap">
+          <div class="product-img-placeholder">
+            <div class="css-bottle">
+              <div class="css-bottle-neck"></div>
+              <div class="css-bottle-shoulder"></div>
+              <div class="css-bottle-body"></div>
+            </div>
+          </div>
+          <div class="product-badge">5% OFF</div>
+          <div class="product-hover-cta">Adicionar ao carrinho</div>
+        </div>
+        <div class="product-info">
+          <span class="product-region">Pfalz · Branco · Semi-seco</span>
+          <h3 class="product-name">Villa Wolf Gewürztraminer 2024</h3>
+          <p class="product-notes">Aromático, lichia e rosa — um vinho que seduz antes mesmo do primeiro gole.</p>
+          <div class="product-pairing">
+            <span class="pairing-label">Harmoniza:</span>
+            <span>Culinária asiática · Especiarias · Sobremesas</span>
+          </div>
+          <div class="product-footer">
+            <div>
+              <span class="product-price">R$159,90</span>
+              <span class="product-price-pix">R$155,10 no Pix</span>
+            </div>
+            <button class="btn-add" aria-label="Adicionar ao carrinho">+</button>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     LINHAS DA MARCA
+============================================ -->
+<section class="section-lines">
+  <div class="container">
+    <div class="section-header" data-anim>
+      <span class="section-label">Nossas linhas</span>
+      <h2 class="section-title">Uma coleção para <em>cada momento</em></h2>
+    </div>
+
+    <div class="lines-grid">
+      <a href="https://rebenhaus.com.br/essencial/" class="line-card" data-anim data-anim-delay="1">
+        <span class="line-tag">Entrada</span>
+        <div class="line-name">Essencial</div>
+        <p class="line-desc">A porta de entrada para o universo dos vinhos alemães. Acessível, versátil e sempre surpreendente.</p>
+        <span class="line-link">Explorar linha</span>
+      </a>
+
+      <a href="https://rebenhaus.com.br/selecao/" class="line-card" data-anim data-anim-delay="2">
+        <span class="line-tag">Refinamento</span>
+        <div class="line-name">Seleção</div>
+        <p class="line-desc">Rótulos curados com critério ainda mais apurado. Para quem já conhece e quer ir além.</p>
+        <span class="line-link">Explorar linha</span>
+      </a>
+
+      <a href="https://rebenhaus.com.br/colecionavel/" class="line-card" data-anim data-anim-delay="3">
+        <span class="line-tag">Raridade</span>
+        <div class="line-name">Colecionável</div>
+        <p class="line-desc">Edições especiais e rótulos raros. Para guardar, presentear e inesquecer.</p>
+        <span class="line-link">Explorar linha</span>
+      </a>
+
+      <a href="https://rebenhaus.com.br/festas/" class="line-card" data-anim data-anim-delay="4">
+        <span class="line-tag">Celebração</span>
+        <div class="line-name">Festas</div>
+        <p class="line-desc">Espumantes e rótulos festivos para elevar suas celebrações com sofisticação alemã.</p>
+        <span class="line-link">Explorar linha</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     HISTÓRIA DA MARCA
+============================================ -->
+<section class="section-story" id="historia">
+
+  <div class="story-visual">
+    <div class="story-stat-grid">
+      <div class="story-stat">
+        <span class="stat-number">10</span>
+        <span class="stat-label">Anos imersos na<br>cultura alemã</span>
+      </div>
+      <div class="story-stat">
+        <span class="stat-number">13</span>
+        <span class="stat-label">Regiões vinícolas<br>na Alemanha</span>
+      </div>
+      <div class="story-stat">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Curadoria<br>especializada</span>
+      </div>
+      <div class="story-stat">
+        <span class="stat-number">∞</span>
+        <span class="stat-label">Paixão por vinho<br>alemão</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="story-content" data-anim>
+    <span class="section-label">Nossa história</span>
+    <h2 class="section-title">Nascemos no Brasil,<br><em>crescemos na Alemanha</em></h2>
+
+    <p class="story-text">
+      Depois de quase uma década imersos na rica cultura do país, aquela vivência cultivou mais do que experiências: despertou uma paixão profunda por um universo vitivinícola vasto e ainda pouquíssimo explorado no Brasil.
+    </p>
+
+    <div class="story-quote">
+      <p>Não é apenas sobre garrafas. É sobre catalisar experiências e construir pontes entre dois mundos em cada taça.</p>
+      <cite>— A missão da Rebenhaus</cite>
+    </div>
+
+    <p class="story-text">
+      "Tropicalizamos" o vinho alemão — desafiando a percepção de que estes vinhos se restringem a climas frios. São a escolha ideal para celebrações na praia, encontros sociais e o cotidiano vibrante do Brasil.
+    </p>
+
+    <a href="https://rebenhaus.com.br/quem-somos/" class="btn-ghost story-btn">Conheça nossa história</a>
+  </div>
+</section>
+
+<!-- ============================================
+     DEPOIMENTOS
+============================================ -->
+<section class="section-testimonials">
+  <div class="container">
+    <div class="section-header" data-anim>
+      <span class="section-label">Experiências reais</span>
+      <h2 class="section-title">O que nossos <em>clientes dizem</em></h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card" data-anim data-anim-delay="1">
+        <div class="stars">
+          <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+        </div>
+        <p class="testimonial-text">"A Rebenhaus me apresentou um novo conceito em vinhos alemães. Adorei todos os rótulos, principalmente o Pinot Blanc — um vinho refrescante, que oferece diferentes opções de harmonização, com um preço justo."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">GS</div>
+          <div>
+            <div class="author-name">Guilherme Silvestre</div>
+            <div class="author-location">Campinas, São Paulo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card" data-anim data-anim-delay="2">
+        <div class="stars">
+          <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+        </div>
+        <p class="testimonial-text">"Experiência fantástica! Vinhos de qualidade excepcional, com rótulos nobres e bem selecionados. Uma imersão sofisticada no mundo do vinho europeu, leve e acessível. Recomendo de olhos fechados!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">FJ</div>
+          <div>
+            <div class="author-name">Francisco Jr</div>
+            <div class="author-location">São José dos Campos, São Paulo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card" data-anim data-anim-delay="3">
+        <div class="stars">
+          <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+        </div>
+        <p class="testimonial-text">"Descobrir a Rebenhaus foi uma revelação. Nunca imaginei que vinho alemão combinaria tão bem com nossa culinária. O atendimento é impecável e a entrega foi rápida e cuidadosa."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AP</div>
+          <div>
+            <div class="author-name">Ana Paula R.</div>
+            <div class="author-location">São Paulo, São Paulo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     PODCAST
+============================================ -->
+<section class="section-podcast">
+  <div class="container" data-anim>
+    <span class="section-label podcast-label-intro">Aprofunde seu conhecimento</span>
+    <h2 class="section-title podcast-title-intro">Ouça e aprenda sobre<br><em>vinhos alemães</em></h2>
+    <a href="https://open.spotify.com/episode/6w3MWirdwAgo4ON05gJi4J" class="podcast-card" target="_blank">
+      <div class="podcast-icon">▶</div>
+      <div class="podcast-info">
+        <div class="podcast-label">UnamiCast · Spotify</div>
+        <div class="podcast-title">Episódio 194: A Classificação dos Vinhos da Alemanha</div>
+        <div class="podcast-source">Clique para ouvir no Spotify</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ============================================
+     CTA FINAL
+============================================ -->
+<section class="section-cta">
+  <div class="container">
+    <div class="cta-content" data-anim>
+      <span class="cta-label">Pronto para descobrir?</span>
+      <h2 class="cta-title">Sua próxima experiência<br>inesquecível está <em>a um clique</em></h2>
+      <p class="cta-sub">Fale com nosso especialista e receba uma recomendação personalizada baseada no seu paladar.</p>
+      <div class="cta-buttons">
+        <a href="https://rebenhaus.com.br/produtos/" class="btn-primary">Explorar toda a coleção</a>
+        <a href="https://wa.me/5512974019009" class="btn-whatsapp" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Falar com especialista
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     NEWSLETTER
+============================================ -->
+<section class="section-newsletter">
+  <div class="container">
+    <div class="newsletter-inner" data-anim>
+      <h3 class="newsletter-title">Receba nossa curadoria</h3>
+      <p class="newsletter-sub">Novidades, harmonizações e ofertas exclusivas — direto no seu e-mail. Sem spam, só bom conteúdo sobre o universo dos vinhos alemães.</p>
+      <form class="newsletter-form" onsubmit="return false">
+        <input type="email" placeholder="Seu melhor e-mail" aria-label="Email para newsletter">
+        <button type="submit">Quero receber</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+============================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">Reben<span>haus</span></div>
+        <p class="footer-tagline">A tradição alemã encontra a vivacidade brasileira. Curadoria especializada de vinhos alemães para o paladar brasileiro.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com/reben.haus" class="social-btn" target="_blank" aria-label="Instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://wa.me/5512974019009" class="social-btn" target="_blank" aria-label="WhatsApp">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <span class="footer-col-title">Produtos</span>
+        <ul class="footer-links">
+          <li><a href="https://rebenhaus.com.br/essencial/">Linha Essencial</a></li>
+          <li><a href="https://rebenhaus.com.br/selecao/">Linha Seleção</a></li>
+          <li><a href="https://rebenhaus.com.br/colecionavel/">Linha Colecionável</a></li>
+          <li><a href="https://rebenhaus.com.br/festas/">Linha Festas</a></li>
+          <li><a href="https://rebenhaus.com.br/produtos/">Todos os produtos</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <span class="footer-col-title">Institucional</span>
+        <ul class="footer-links">
+          <li><a href="https://rebenhaus.com.br/quem-somos/">Quem Somos</a></li>
+          <li><a href="https://rebenhaus.com.br/contato/">Contato</a></li>
+          <li><a href="https://rebenhaus.com.br/politica-de-privacidade/">Privacidade</a></li>
+          <li><a href="https://rebenhaus.com.br/trocas-e-devolucoes/">Trocas e Devoluções</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <span class="footer-col-title">Contato</span>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/5512974019009">(12) 97401-9009</a></li>
+          <li><a href="https://instagram.com/reben.haus">@reben.haus</a></li>
+          <li><a href="https://rebenhaus.com.br/account/login/">Minha conta</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-legal">© 2026 Prost Importações e Bebidas Ltda. · CNPJ 62.559.948/0001-39</span>
+      <span class="footer-warning">Proibida a venda e consumo para menores de 18 anos. Beba com moderação.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>
