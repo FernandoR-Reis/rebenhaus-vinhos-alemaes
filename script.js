@@ -514,4 +514,8 @@
       window.location.href = 'https://google.com';
     });
   }
+
+  // Inicializar produtos
+  seedProductsIfNeeded();
+  renderPublicProducts();
 })();
