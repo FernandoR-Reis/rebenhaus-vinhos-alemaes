@@ -103,9 +103,14 @@
   }
 
   function generateProductId(products) {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      var uuid = 'produto-' + window.crypto.randomUUID();
+      if (!products.some(function(product) { return product.id === uuid; })) return uuid;
+    }
+
     var id = '';
     do {
-      id = 'produto-' + Date.now() + '-' + Math.floor(Math.random() * 100000);
+      id = 'produto-' + Date.now() + '-' + Math.floor(Math.random() * 1000000000);
     } while (products.some(function(product) { return product.id === id; }));
     return id;
   }
