@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rebenhaus — Nossa coleção</title>
+<meta name="description" content="Conheça a coleção boutique da Rebenhaus: vinhos alemães selecionados para experiências sofisticadas e memoráveis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body data-page="produtos" data-depth="1">
+<div class="age-gate" id="ageGate">
+  <div class="age-gate-box">
+    <div class="age-gate-logo">Reben<span>haus</span></div>
+    <div class="age-gate-line"></div>
+    <h2 class="age-gate-title">Verificação de Idade</h2>
+    <p class="age-gate-text">Este site contém bebidas alcoólicas. Por favor, confirme que você tem 18 anos ou mais para continuar.</p>
+    <div class="age-gate-btns">
+      <button class="age-yes" id="ageYesBtn">Tenho 18+</button>
+      <button class="age-no" id="ageNoBtn">Não tenho</button>
+    </div>
+    <p class="age-warning">Beba com moderação. Proibida a venda para menores.</p>
+  </div>
+</div>
+
+<div class="announcement">✦ Curadoria boutique · Atendimento consultivo · Vinhos alemães selecionados ✦</div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a href="../" class="nav-logo" data-route="home">Reben<span>haus</span></a>
+    <ul class="nav-links">
+      <li><a href="../" data-route="home">Home</a></li>
+      <li><a href="./" data-route="produtos">Produtos</a></li>
+      <li><a href="../sobre/" data-route="sobre">Sobre</a></li>
+      <li><a href="../experiencia/" data-route="experiencia">Experiência</a></li>
+      <li><a href="../contato/" data-route="contato">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="https://wa.me/5512974019009" class="btn-cta-nav" target="_blank" rel="noopener noreferrer" data-whatsapp-message="Olá, gostaria de receber uma recomendação personalizada da Rebenhaus.">Falar com especialista</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero page-hero-products">
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content container">
+    <div class="page-hero-copy" data-anim>
+      <span class="page-hero-kicker">Coleção Rebenhaus</span>
+      <h1 class="page-hero-title">Nossa coleção</h1>
+      <p class="page-hero-subtitle">Rótulos alemães selecionados para experiências sofisticadas e memoráveis.</p>
+    </div>
+  </div>
+</section>
+
+<section class="products-editorial">
+  <div class="container editorial-grid">
+    <div class="editorial-copy" data-anim>
+      <span class="section-label">Curadoria premium</span>
+      <h2 class="section-title">Uma vitrine pensada como <em>coleção boutique</em></h2>
+      <p class="section-desc section-desc-left">Cada rótulo foi selecionado para dialogar com a elegância da mesa brasileira, sempre com frescor, precisão e identidade alemã marcante.</p>
+    </div>
+    <div class="editorial-note" data-anim data-anim-delay="2">
+      <p>Mais do que comprar um vinho, a experiência aqui é descobrir um repertório autoral para receber, presentear e brindar com intenção.</p>
+    </div>
+  </div>
+</section>
+
+<section class="products-collection-section">
+  <div class="container">
+    <div class="products-toolbar" data-anim>
+      <div>
+        <span class="section-label">Filtros sofisticados</span>
+        <h2 class="section-title products-toolbar-title">Explore por estilo, ocasião e perfil de serviço</h2>
+      </div>
+      <div class="products-toolbar-controls">
+        <label class="products-search-wrap">
+          <span class="sr-only">Buscar produto</span>
+          <input id="productsSearch" class="products-search" type="search" placeholder="Buscar rótulo, perfil ou harmonização">
+        </label>
+        <select id="productsAvailability" class="products-select" aria-label="Disponibilidade">
+          <option value="todos">Toda a coleção</option>
+          <option value="pronta-entrega">Somente pronta entrega</option>
+          <option value="sob-consulta">Itens sob consulta</option>
+        </select>
+        <label class="products-checkbox">
+          <input id="productsFeatured" type="checkbox">
+          <span>Somente destaques</span>
+        </label>
+      </div>
+    </div>
+
+    <div id="productsCategoryFilters" class="products-filter-chips" data-anim data-anim-delay="2"></div>
+
+    <div class="products-results-bar" data-anim data-anim-delay="3">
+      <strong id="productsResultCount">0</strong>
+      <span id="productsResultLabel">rótulos disponíveis na coleção</span>
+    </div>
+
+    <div id="productsPageGrid" class="products-grid products-grid-editorial"></div>
+    <div id="productsEmpty" class="products-empty" hidden>
+      <h3>Nenhum rótulo encontrado</h3>
+      <p>Ajuste os filtros ou fale com nosso especialista para uma curadoria personalizada.</p>
+      <a href="https://wa.me/5512974019009" class="btn-primary" data-whatsapp-message="Olá, não encontrei um rótulo na vitrine e gostaria de uma recomendação personalizada.">Falar com especialista</a>
+    </div>
+  </div>
+</section>
+
+<section class="products-institutional">
+  <div class="container products-institutional-grid">
+    <div class="products-institutional-card" data-anim>
+      <span class="section-label">Seleção viva</span>
+      <h2 class="section-title">Atualizada em tempo real pela curadoria interna</h2>
+      <p class="section-desc section-desc-left">A coleção é gerenciada localmente para manter a operação leve, integrada e pronta para uso imediato no projeto atual.</p>
+    </div>
+    <div class="products-institutional-card is-dark" data-anim data-anim-delay="2">
+      <span class="section-label">Experiência consultiva</span>
+      <p>Cada solicitação pode ser aprofundada via atendimento especializado, preservando a atmosfera editorial e premium da marca sem transformar a vitrine em um ecommerce genérico.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-cta">
+  <div class="container">
+    <div class="cta-content" data-anim>
+      <span class="cta-label">Pronto para escolher?</span>
+      <h2 class="cta-title">Descubra um rótulo para sua próxima <em>experiência memorável</em></h2>
+      <p class="cta-sub">Converse com nosso especialista e receba indicações alinhadas ao seu paladar, ocasião e harmonização ideal.</p>
+      <div class="cta-buttons">
+        <a href="https://wa.me/5512974019009" class="btn-primary" data-whatsapp-message="Olá, gostaria de receber uma recomendação de vinho da coleção Rebenhaus.">Solicitar recomendação</a>
+        <a href="../sobre/" class="btn-whatsapp" data-route="sobre">Conhecer a história</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" id="contato">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">Reben<span>haus</span></div>
+        <p class="footer-tagline">Curadoria especializada de vinhos alemães para uma experiência sofisticada, autoral e memorável.</p>
+      </div>
+      <div>
+        <span class="footer-col-title">Navegação</span>
+        <ul class="footer-links">
+          <li><a href="../" data-route="home">Home</a></li>
+          <li><a href="./" data-route="produtos">Produtos</a></li>
+          <li><a href="../sobre/" data-route="sobre">Sobre</a></li>
+          <li><a href="../experiencia/" data-route="experiencia">Experiência</a></li>
+          <li><a href="../contato/" data-route="contato">Contato</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-col-title">Coleção</span>
+        <ul class="footer-links">
+          <li><a href="./?categoria=Branco" data-products-category="Branco">Brancos</a></li>
+          <li><a href="./?categoria=Tinto" data-products-category="Tinto">Tintos</a></li>
+          <li><a href="./?categoria=Rosé" data-products-category="Rosé">Rosés</a></li>
+          <li><a href="./?categoria=Espumante" data-products-category="Espumante">Espumantes</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-col-title">Contato</span>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/5512974019009" target="_blank" rel="noopener noreferrer" data-whatsapp-message="Olá, gostaria de falar com a Rebenhaus sobre a coleção.">(12) 97401-9009</a></li>
+          <li><a href="https://instagram.com/reben.haus" target="_blank" rel="noopener noreferrer">@reben.haus</a></li>
+          <li><a href="../admin/" data-route="admin">Área administrativa</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-legal">© 2026 Prost Importações e Bebidas Ltda. · CNPJ 62.559.948/0001-39</span>
+      <span class="footer-warning">Proibida a venda e consumo para menores de 18 anos. Beba com moderação.</span>
+      <a href="../admin/" class="footer-admin" data-route="admin">Admin</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../products.js" defer></script>
+<script src="../script.js" defer></script>
+</body>
+</html>
