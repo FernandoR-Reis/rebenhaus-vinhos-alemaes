@@ -17,6 +17,20 @@
     contato: 'contato/',
     admin: 'admin/'
   };
+  var MOBILE_READ_MORE_SELECTORS = [
+    '.hero-sub',
+    '.section-desc',
+    '.why-text',
+    '.line-desc',
+    '.story-text',
+    '.testimonial-text',
+    '.cta-sub',
+    '.newsletter-sub',
+    '.page-hero-subtitle',
+    '.editorial-note p',
+    '.products-institutional-card p',
+    '.product-notes'
+  ];
   var defaultProducts = Array.isArray(window.REBENHAUS_DEFAULT_PRODUCTS)
     ? window.REBENHAUS_DEFAULT_PRODUCTS.map(normalizeProduct)
     : [];
@@ -201,8 +215,10 @@
     var grid = document.getElementById('productsGrid');
     if (!grid) return;
 
-    var featuredProducts = sortProducts(getActiveProducts()).slice(0, 4);
+    var featuredLimit = window.matchMedia('(max-width: 768px)').matches ? 2 : 4;
+    var featuredProducts = sortProducts(getActiveProducts()).slice(0, featuredLimit);
     grid.innerHTML = featuredProducts.map(buildProductCard).join('\n');
+    applyMobileReadMore(document);
   }
 
   function createProductsPageController() {
@@ -277,6 +293,7 @@
       emptyState.hidden = filteredProducts.length > 0;
       syncQuery();
       applyRevealAnimations();
+      applyMobileReadMore(document);
     }
 
     chips.addEventListener('click', function(event) {
@@ -713,6 +730,70 @@
     }
   }
 
+  function buildCollapsedText(text, maxChars) {
+    var cleanText = String(text || '').replace(/\s+/g, ' ').trim();
+    if (cleanText.length <= maxChars) return cleanText;
+    var trimmed = cleanText.slice(0, maxChars);
+    var lastSpace = trimmed.lastIndexOf(' ');
+    if (lastSpace > 40) {
+      trimmed = trimmed.slice(0, lastSpace);
+    }
+    return trimmed + '…';
+  }
+
+  function getMobileReadMoreLimit(element) {
+    if (element.classList.contains('testimonial-text')) return 128;
+    if (element.classList.contains('product-notes')) return 110;
+    if (element.classList.contains('story-text')) return 150;
+    if (element.classList.contains('why-text')) return 128;
+    return 138;
+  }
+
+  function applyMobileReadMore(scope) {
+    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    if (currentPage !== 'home' && currentPage !== 'produtos') return;
+
+    var root = scope || document;
+    var selector = MOBILE_READ_MORE_SELECTORS.join(',');
+    var candidates = root.querySelectorAll(selector);
+
+    Array.prototype.forEach.call(candidates, function(element) {
+      if (!element || element.dataset.mobileReadReady === '1') return;
+
+      var originalText = String(element.textContent || '').replace(/\s+/g, ' ').trim();
+      var maxChars = getMobileReadMoreLimit(element);
+      if (!originalText || originalText.length <= maxChars) return;
+
+      var collapsedText = buildCollapsedText(originalText, maxChars);
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mobile-readmore-btn';
+      button.textContent = 'Ler mais';
+      button.setAttribute('aria-expanded', 'false');
+
+      element.dataset.mobileReadReady = '1';
+      element.dataset.mobileReadOriginal = originalText;
+      element.dataset.mobileReadCollapsed = collapsedText;
+      element.textContent = collapsedText;
+
+      button.addEventListener('click', function() {
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        if (expanded) {
+          element.textContent = element.dataset.mobileReadCollapsed || collapsedText;
+          button.textContent = 'Ler mais';
+          button.setAttribute('aria-expanded', 'false');
+          return;
+        }
+
+        element.textContent = element.dataset.mobileReadOriginal || originalText;
+        button.textContent = 'Ler menos';
+        button.setAttribute('aria-expanded', 'true');
+      });
+
+      element.insertAdjacentElement('afterend', button);
+    });
+  }
+
   function init() {
     seedProductsIfNeeded();
     applyInternalLinks();
@@ -737,6 +818,7 @@
     });
 
     applyRevealAnimations();
+    applyMobileReadMore(document);
   }
 
   init();
