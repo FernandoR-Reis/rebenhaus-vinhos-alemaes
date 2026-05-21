@@ -188,6 +188,7 @@
 
   function renderAdminPage() {
     window.scrollTo(0, 0);
+    document.body.style.overflow = 'auto';
     document.body.innerHTML = [
       '<main style="min-height:100vh;background:#0d0f0d;color:#f7f3ec;font-family:Jost,Arial,sans-serif;padding:32px 20px;">',
       '  <div style="max-width:1120px;margin:0 auto;">',
@@ -477,6 +478,14 @@
 
   // Listen for navigation changes (clicking admin link)
   window.addEventListener('hashchange', handleRouteChange);
+
+  // Also add direct click handler for admin link to ensure it works
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.href && e.target.href.indexOf('#/admin') !== -1) {
+      console.log('Admin link clicked directly');
+      setTimeout(handleRouteChange, 0);
+    }
+  });
 
   window.addEventListener('storage', function(event) {
     if (event.key === STORAGE_KEY_PRODUCTS) {
