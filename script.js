@@ -17,7 +17,7 @@
     contato: 'contato/',
     admin: 'admin/'
   };
-  var MOBILE_READ_MORE_SELECTORS = [
+  var MOBILE_READ_MORE_SELECTORS = Object.freeze([
     '.hero-sub',
     '.section-desc',
     '.why-text',
@@ -30,8 +30,8 @@
     '.editorial-note p',
     '.products-institutional-card p',
     '.product-notes'
-  ];
-  var MOBILE_READ_MORE_MIN_WORD_BOUNDARY = 40;
+  ]);
+  var MOBILE_READ_MORE_MIN_CHAR_BOUNDARY = 40;
   var defaultProducts = Array.isArray(window.REBENHAUS_DEFAULT_PRODUCTS)
     ? window.REBENHAUS_DEFAULT_PRODUCTS.map(normalizeProduct)
     : [];
@@ -731,12 +731,16 @@
     }
   }
 
+  function normalizeWhitespace(text) {
+    return String(text || '').replace(/\s+/g, ' ').trim();
+  }
+
   function buildCollapsedText(text, maxChars) {
-    var cleanText = String(text || '').replace(/\s+/g, ' ').trim();
+    var cleanText = normalizeWhitespace(text);
     if (cleanText.length <= maxChars) return cleanText;
     var trimmed = cleanText.slice(0, maxChars);
     var lastSpace = trimmed.lastIndexOf(' ');
-    if (lastSpace > MOBILE_READ_MORE_MIN_WORD_BOUNDARY) {
+    if (lastSpace > MOBILE_READ_MORE_MIN_CHAR_BOUNDARY) {
       trimmed = trimmed.slice(0, lastSpace);
     }
     return trimmed + '…';
@@ -761,7 +765,7 @@
     Array.prototype.forEach.call(candidates, function(element) {
       if (!element || element.dataset.mobileReadReady === '1') return;
 
-      var originalText = String(element.textContent || '').replace(/\s+/g, ' ').trim();
+      var originalText = normalizeWhitespace(element.textContent || '');
       var maxChars = getMobileReadMoreLimit(element);
       if (!originalText || originalText.length <= maxChars) return;
 
@@ -776,26 +780,22 @@
       element.dataset.mobileReadReady = '1';
       element.dataset.mobileReadOriginal = originalText;
       element.dataset.mobileReadCollapsed = collapsedText;
-      element.textContent = collapsedText;
+      updateReadMoreState(element, button, false, originalText, collapsedText);
 
       button.addEventListener('click', function() {
         var expanded = button.getAttribute('aria-expanded') === 'true';
-        if (expanded) {
-          element.textContent = element.dataset.mobileReadCollapsed || collapsedText;
-          button.textContent = 'Ler mais';
-          button.setAttribute('aria-expanded', 'false');
-          button.setAttribute('aria-label', 'Expandir texto');
-          return;
-        }
-
-        element.textContent = element.dataset.mobileReadOriginal || originalText;
-        button.textContent = 'Ler menos';
-        button.setAttribute('aria-expanded', 'true');
-        button.setAttribute('aria-label', 'Recolher texto');
+        updateReadMoreState(element, button, !expanded, originalText, collapsedText);
       });
 
       element.insertAdjacentElement('afterend', button);
     });
+  }
+
+  function updateReadMoreState(element, button, isExpanded, originalText, collapsedText) {
+    element.textContent = isExpanded ? (element.dataset.mobileReadOriginal || originalText) : (element.dataset.mobileReadCollapsed || collapsedText);
+    button.textContent = isExpanded ? 'Ler menos' : 'Ler mais';
+    button.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    button.setAttribute('aria-label', isExpanded ? 'Recolher texto' : 'Expandir texto');
   }
 
   function init() {
