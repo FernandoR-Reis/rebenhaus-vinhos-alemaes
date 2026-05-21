@@ -457,18 +457,28 @@
     }
   }
 
-  seedProductsIfNeeded();
+  // Handle route changes (initial load + hash changes)
+  function handleRouteChange() {
+    seedProductsIfNeeded();
+    
+    if (isAdminRoute()) {
+      renderAdminPage();
+      return;
+    }
 
-  if (isAdminRoute()) {
-    renderAdminPage();
-    return;
+    renderPublicProducts();
   }
 
-  renderPublicProducts();
+  handleRouteChange();
+
+  // Listen for navigation changes (clicking admin link)
+  window.addEventListener('hashchange', handleRouteChange);
 
   window.addEventListener('storage', function(event) {
     if (event.key === STORAGE_KEY_PRODUCTS) {
-      renderPublicProducts();
+      if (!isAdminRoute()) {
+        renderPublicProducts();
+      }
     }
   });
 
@@ -514,8 +524,4 @@
       window.location.href = 'https://google.com';
     });
   }
-
-  // Inicializar produtos
-  seedProductsIfNeeded();
-  renderPublicProducts();
 })();
