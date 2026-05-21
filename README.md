@@ -15,20 +15,23 @@ A experiência inclui:
 - verificação de idade
 - hero premium com animações
 - seções institucionais
-- vitrine de produtos
+- vitrine dinâmica de produtos
+- página dedicada /produtos com filtros editoriais
+- área administrativa oculta em /admin com persistência em localStorage
 - depoimentos
 - newsletter
-- CTA para WhatsApp e navegação para o site principal
+- CTA para WhatsApp e navegação interna
 
 ## Estrutura do projeto
 
 - [index.html](index.html) — estrutura da página
 - [styles.css](styles.css) — estilos visuais
-- [script.js](script.js) — interações e animações
+- [products.js](products.js) — dados iniciais da coleção
+- [script.js](script.js) — interações, renderização dinâmica e administração
 
 ## Como executar localmente
 
-Basta abrir o arquivo [index.html](index.html) no navegador.
+Basta abrir o arquivo [index.html](index.html) no navegador. As páginas internas também funcionam abrindo os arquivos em `/produtos`, `/admin`, `/sobre`, `/experiencia` e `/contato`.
 
 Se preferir usar um servidor local simples, utilize qualquer extensão de Live Server no VS Code ou sirva a pasta com sua ferramenta de preferência.
 
