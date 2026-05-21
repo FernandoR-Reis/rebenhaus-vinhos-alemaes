@@ -2233,3 +2233,203 @@ body {
     justify-content: center;
   }
 }
+
+@media (max-width: 768px) {
+  .mobile-readmore-btn {
+    margin-top: 12px;
+    background: transparent;
+    border: 1px solid rgba(184,145,58,0.32);
+    color: var(--gold);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-family: var(--sans);
+  }
+
+  .mobile-readmore-btn:hover {
+    background: rgba(184,145,58,0.12);
+  }
+
+  body[data-page="home"] .hero-content {
+    padding: 116px 22px 96px;
+    gap: 28px;
+  }
+
+  body[data-page="home"] .hero-sub {
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 34px;
+  }
+
+  body[data-page="home"] .hero-actions {
+    gap: 12px;
+  }
+
+  body[data-page="home"] .hero-actions .btn-primary,
+  body[data-page="home"] .hero-actions .btn-ghost,
+  body[data-page="home"] .cta-buttons .btn-primary,
+  body[data-page="home"] .cta-buttons .btn-whatsapp {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  body[data-page="home"] .hero-scroll-hint {
+    display: none;
+  }
+
+  body[data-page="home"] .trust-bar {
+    padding: 28px 0;
+  }
+
+  body[data-page="home"] .trust-bar-inner {
+    gap: 12px;
+    padding: 0 20px;
+  }
+
+  body[data-page="home"] .trust-item {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  body[data-page="home"] .trust-item:nth-child(n + 3) {
+    display: none;
+  }
+
+  body[data-page="home"] .section-why,
+  body[data-page="home"] .section-collection,
+  body[data-page="home"] .section-lines,
+  body[data-page="home"] .section-testimonials,
+  body[data-page="home"] .section-podcast,
+  body[data-page="home"] .section-cta {
+    padding-top: 108px;
+    padding-bottom: 108px;
+  }
+
+  body[data-page="home"] .section-newsletter {
+    padding-top: 96px;
+    padding-bottom: 96px;
+  }
+
+  body[data-page="home"] .section-header {
+    margin-bottom: 48px;
+  }
+
+  body[data-page="home"] .section-title {
+    line-height: 1.14;
+  }
+
+  body[data-page="home"] .section-desc {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  body[data-page="home"] .why-grid,
+  body[data-page="home"] .products-grid,
+  body[data-page="home"] .lines-grid,
+  body[data-page="home"] .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  body[data-page="home"] .why-card,
+  body[data-page="home"] .line-card,
+  body[data-page="home"] .testimonial-card {
+    padding: 34px 24px;
+  }
+
+  body[data-page="home"] .story-visual {
+    display: none;
+  }
+
+  body[data-page="home"] .story-content {
+    padding: 86px 24px;
+  }
+
+  body[data-page="home"] .story-text {
+    font-size: 14px;
+    line-height: 1.86;
+    margin-bottom: 14px;
+  }
+
+  body[data-page="home"] .story-quote {
+    margin: 22px 0 26px;
+  }
+
+  body[data-page="home"] .podcast-card {
+    align-items: flex-start;
+    padding: 22px;
+    gap: 14px;
+  }
+
+  body[data-page="home"] .podcast-title {
+    font-size: 17px;
+  }
+
+  body[data-page="home"] .newsletter-sub {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  body[data-page="produtos"] .products-editorial {
+    padding-top: 84px;
+    padding-bottom: 24px;
+  }
+
+  body[data-page="produtos"] .products-collection-section {
+    padding-top: 38px;
+    padding-bottom: 96px;
+  }
+
+  body[data-page="produtos"] .products-institutional {
+    padding-bottom: 96px;
+  }
+
+  body[data-page="produtos"] .products-filter-chips {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+  }
+
+  body[data-page="produtos"] .products-filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  body[data-page="produtos"] .filter-chip {
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  body[data-page="produtos"] .products-results-bar {
+    margin-bottom: 22px;
+  }
+
+  body[data-page="produtos"] .products-results-bar #productsResultLabel {
+    display: none;
+  }
+
+  body[data-page="produtos"] .product-stock,
+  body[data-page="produtos"] .product-pairing,
+  body[data-page="produtos"] .product-price-pix,
+  body[data-page="home"] .product-stock,
+  body[data-page="home"] .product-pairing,
+  body[data-page="home"] .product-price-pix {
+    display: none;
+  }
+
+  body[data-page="produtos"] .product-info,
+  body[data-page="home"] .product-info {
+    padding: 22px 20px;
+  }
+
+  body[data-page="produtos"] .products-grid-editorial,
+  body[data-page="home"] .products-grid {
+    gap: 18px;
+  }
+}
