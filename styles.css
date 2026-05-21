@@ -1308,6 +1308,18 @@ body {
   letter-spacing: 0.04em;
 }
 
+.footer-admin {
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(247,243,236,0.15);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color var(--trans);
+}
+.footer-admin:hover {
+  color: rgba(247,243,236,0.4);
+}
+
 @media (max-width: 900px) {
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
 }
