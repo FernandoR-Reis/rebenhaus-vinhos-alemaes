@@ -2,6 +2,7 @@
   var STORAGE_KEY_PRODUCTS = 'rebenhaus_products_v1';
   var STORAGE_KEY_ADMIN_AUTH = 'rebenhaus_admin_auth_v1';
   var ADMIN_PASSWORD = 'rebenhaus@2026';
+  var MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
 
   var defaultProducts = [
     {
@@ -89,6 +90,16 @@
 
   function saveProducts(products) {
     localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(products));
+  }
+
+  function saveProductsSafely(products) {
+    try {
+      saveProducts(products);
+      return true;
+    } catch (error) {
+      window.alert('Não foi possível salvar. Reduza o tamanho da imagem ou use uma URL externa.');
+      return false;
+    }
   }
 
   function seedProductsIfNeeded() {
@@ -258,7 +269,7 @@
       uploadedImageData = '';
     }
 
-    function parseToNumber(value, fallback) {
+    function safeParseNumber(value, fallback) {
       var number = Number(value);
       return Number.isFinite(number) ? number : fallback;
     }
@@ -334,6 +345,12 @@
         uploadedImageData = '';
         return;
       }
+      if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        uploadedImageData = '';
+        imagemFileEl.value = '';
+        window.alert('Imagem muito grande. Limite: 2MB.');
+        return;
+      }
 
       var reader = new FileReader();
       reader.onload = function(e) {
@@ -355,7 +372,7 @@
         nome: nomeEl.value.trim(),
         subtitulo: subtituloEl.value.trim(),
         descricao: descricaoEl.value.trim(),
-        preco: parseToNumber(precoEl.value, 0),
+        preco: safeParseNumber(precoEl.value, 0),
         categoria: categoriaEl.value.trim(),
         imagem: uploadedImageData || imagemEl.value.trim() || (existing ? existing.imagem : ''),
         harmonizacao: harmonizacaoEl.value.trim(),
@@ -371,7 +388,7 @@
           })
         : [nextProduct].concat(products);
 
-      saveProducts(updatedProducts);
+      if (!saveProductsSafely(updatedProducts)) return;
       renderList();
       resetForm();
     });
@@ -388,7 +405,7 @@
 
       if (action === 'remove') {
         var nextProducts = products.filter(function(product) { return product.id !== productId; });
-        saveProducts(nextProducts);
+        if (!saveProductsSafely(nextProducts)) return;
         renderList();
         if (idEl.value === productId) resetForm();
         return;
@@ -399,7 +416,7 @@
           if (product.id !== productId) return product;
           return Object.assign({}, product, { status: product.status === 'ativo' ? 'inativo' : 'ativo' });
         });
-        saveProducts(toggledProducts);
+        if (!saveProductsSafely(toggledProducts)) return;
         renderList();
         return;
       }
