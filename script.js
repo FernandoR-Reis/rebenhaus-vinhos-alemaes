@@ -757,6 +757,10 @@
     return 138;
   }
 
+  function isMobileViewport() {
+    return window.matchMedia('(max-width: ' + MOBILE_BREAKPOINT_PX + 'px)').matches;
+  }
+
   function applyMobileReadMore(scope) {
     if (!isMobileViewport()) return;
     if (currentPage !== 'home' && currentPage !== 'produtos') return;
@@ -767,6 +771,7 @@
 
     Array.prototype.forEach.call(candidates, function(element) {
       if (!element || element.dataset.mobileReadReady === '1') return;
+      if (element.children && element.children.length > 0) return;
 
       var originalText = normalizeWhitespace(element.textContent || '');
       var maxChars = getMobileReadMoreLimit(element);
@@ -830,6 +835,3 @@
 
   init();
 })();
-  function isMobileViewport() {
-    return window.matchMedia('(max-width: ' + MOBILE_BREAKPOINT_PX + 'px)').matches;
-  }
