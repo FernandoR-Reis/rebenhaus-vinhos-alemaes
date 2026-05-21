@@ -187,6 +187,7 @@
   }
 
   function renderAdminPage() {
+    window.scrollTo(0, 0);
     document.body.innerHTML = [
       '<main style="min-height:100vh;background:#0d0f0d;color:#f7f3ec;font-family:Jost,Arial,sans-serif;padding:32px 20px;">',
       '  <div style="max-width:1120px;margin:0 auto;">',
@@ -459,13 +460,16 @@
 
   // Handle route changes (initial load + hash changes)
   function handleRouteChange() {
+    console.log('Route change detected. Hash:', window.location.hash);
     seedProductsIfNeeded();
     
     if (isAdminRoute()) {
+      console.log('Admin route detected, rendering admin page');
       renderAdminPage();
       return;
     }
 
+    console.log('Public route detected, rendering products');
     renderPublicProducts();
   }
 
