@@ -1,7 +1,7 @@
 (function() {
   var STORAGE_KEY_PRODUCTS = 'rebenhaus_products_v1';
   var STORAGE_KEY_ADMIN_AUTH = 'rebenhaus_admin_auth_v1';
-  var ADMIN_PASSWORD = 'rebenhaus@2026';
+  var ADMIN_PASSWORD = '0812';
   var MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
 
   var defaultProducts = [
@@ -190,20 +190,20 @@
     window.scrollTo(0, 0);
     document.body.style.overflow = 'auto';
     document.body.innerHTML = [
-      '<main style="min-height:100vh;background:#0d0f0d;color:#f7f3ec;font-family:Jost,Arial,sans-serif;padding:32px 20px;">',
-      '  <div style="max-width:1120px;margin:0 auto;">',
+      '<main style="min-height:100vh;background:#0d0f0d;color:#f7f3ec;font-family:Jost,Arial,sans-serif;padding:32px 20px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">',
+      '  <div style="width:100%;max-width:1120px;margin:0 auto;">',
       '    <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px;">',
       '      <h1 style="margin:0;font-family:Cormorant Garamond,serif;font-size:42px;font-weight:500;">Dashboard de Produtos</h1>',
       '      <button id="adminLogoutBtn" style="border:1px solid rgba(247,243,236,.35);background:transparent;color:#f7f3ec;padding:10px 14px;border-radius:10px;cursor:pointer;">Sair</button>',
       '    </div>',
-      '    <div id="adminLogin" style="display:none;max-width:420px;background:#131713;border:1px solid rgba(184,145,58,.4);border-radius:16px;padding:24px;">',
-      '      <h2 style="margin:0 0 8px;font-size:28px;font-family:Cormorant Garamond,serif;">Acesso restrito</h2>',
-      '      <p style="margin:0 0 18px;opacity:.85;">Digite a senha para administrar a vitrine.</p>',
-      '      <form id="adminLoginForm">',
-      '        <input id="adminPassword" type="password" placeholder="Senha" required style="width:100%;padding:12px;border-radius:10px;border:1px solid #303530;background:#0f120f;color:#f7f3ec;margin-bottom:12px;">',
-      '        <button type="submit" style="width:100%;padding:12px;border:none;border-radius:10px;background:#b8913a;color:#101010;font-weight:600;cursor:pointer;">Entrar</button>',
+      '    <div id="adminLogin" style="display:none;width:100%;max-width:420px;background:#131713;border:1px solid rgba(184,145,58,.4);border-radius:16px;padding:24px;margin:60px auto 0;text-align:center;">',
+      '      <h2 style="margin:0 0 12px;font-size:32px;font-family:Cormorant Garamond,serif;color:#b8913a;">Acesso restrito</h2>',
+      '      <p style="margin:0 0 24px;opacity:.85;font-size:14px;">Digite a senha para administrar a vitrine.</p>',
+      '      <form id="adminLoginForm" style="display:grid;gap:12px;">',
+      '        <input id="adminPassword" type="password" placeholder="Senha" required style="width:100%;padding:14px;border-radius:10px;border:1px solid rgba(184,145,58,.3);background:#0f120f;color:#f7f3ec;font-size:14px;text-align:center;font-weight:500;">',
+      '        <button type="submit" style="width:100%;padding:14px;border:none;border-radius:10px;background:#b8913a;color:#101010;font-weight:600;cursor:pointer;font-size:14px;transition:all 0.3s;border:1px solid #b8913a;">Entrar</button>',
       '      </form>',
-      '      <p id="adminLoginError" style="display:none;color:#ff8080;margin:10px 0 0;">Senha inválida.</p>',
+      '      <p id="adminLoginError" style="display:none;color:#ff8080;margin:12px 0 0;font-size:13px;text-align:center;">Senha inválida.</p>',
       '    </div>',
       '    <div id="adminApp" style="display:none;">',
       '      <div style="display:grid;grid-template-columns:minmax(300px,1fr) minmax(420px,1.4fr);gap:18px;align-items:start;">',
@@ -461,16 +461,13 @@
 
   // Handle route changes (initial load + hash changes)
   function handleRouteChange() {
-    console.log('Route change detected. Hash:', window.location.hash);
     seedProductsIfNeeded();
     
     if (isAdminRoute()) {
-      console.log('Admin route detected, rendering admin page');
       renderAdminPage();
       return;
     }
 
-    console.log('Public route detected, rendering products');
     renderPublicProducts();
   }
 
@@ -482,7 +479,6 @@
   // Also add direct click handler for admin link to ensure it works
   document.addEventListener('click', function(e) {
     if (e.target && e.target.href && e.target.href.indexOf('#/admin') !== -1) {
-      console.log('Admin link clicked directly');
       setTimeout(handleRouteChange, 0);
     }
   });
