@@ -31,6 +31,7 @@
     '.products-institutional-card p',
     '.product-notes'
   ];
+  var MOBILE_READ_MORE_MIN_WORD_BOUNDARY = 40;
   var defaultProducts = Array.isArray(window.REBENHAUS_DEFAULT_PRODUCTS)
     ? window.REBENHAUS_DEFAULT_PRODUCTS.map(normalizeProduct)
     : [];
@@ -735,7 +736,7 @@
     if (cleanText.length <= maxChars) return cleanText;
     var trimmed = cleanText.slice(0, maxChars);
     var lastSpace = trimmed.lastIndexOf(' ');
-    if (lastSpace > 40) {
+    if (lastSpace > MOBILE_READ_MORE_MIN_WORD_BOUNDARY) {
       trimmed = trimmed.slice(0, lastSpace);
     }
     return trimmed + '…';
@@ -770,6 +771,7 @@
       button.className = 'mobile-readmore-btn';
       button.textContent = 'Ler mais';
       button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-label', 'Expandir texto');
 
       element.dataset.mobileReadReady = '1';
       element.dataset.mobileReadOriginal = originalText;
@@ -782,12 +784,14 @@
           element.textContent = element.dataset.mobileReadCollapsed || collapsedText;
           button.textContent = 'Ler mais';
           button.setAttribute('aria-expanded', 'false');
+          button.setAttribute('aria-label', 'Expandir texto');
           return;
         }
 
         element.textContent = element.dataset.mobileReadOriginal || originalText;
         button.textContent = 'Ler menos';
         button.setAttribute('aria-expanded', 'true');
+        button.setAttribute('aria-label', 'Recolher texto');
       });
 
       element.insertAdjacentElement('afterend', button);
