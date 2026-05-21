@@ -1,5 +1,4 @@
 (function() {
-  // v2 isolates the current boutique collection schema from older local data used before the dedicated /produtos and /admin pages.
   var STORAGE_KEY_PRODUCTS = 'rebenhaus_products_v2';
   var STORAGE_KEY_ADMIN_AUTH = 'rebenhaus_admin_auth_v1';
   var ADMIN_PASSWORD = '0812';
@@ -17,30 +16,6 @@
     contato: 'contato/',
     admin: 'admin/'
   };
-  // Keep in sync with styles.css mobile media queries (max-width: 768px).
-  var MOBILE_BREAKPOINT_PX = 768;
-  // Intentional mix: direct classes and scoped descendants for blocks that do not expose dedicated text classes.
-  var MOBILE_READ_MORE_SELECTORS = Object.freeze([
-    '.hero-sub',
-    '.section-desc',
-    '.why-text',
-    '.line-desc',
-    '.story-text',
-    '.testimonial-text',
-    '.cta-sub',
-    '.newsletter-sub',
-    '.page-hero-subtitle',
-    '.editorial-note p',
-    '.products-institutional-card p',
-    '.product-notes'
-  ]);
-  // 40 chars prevents awkwardly short previews while still preferring whole-word truncation.
-  var MOBILE_READ_MORE_MIN_CHAR_BOUNDARY = 40;
-  var MOBILE_READ_MORE_LIMIT_TESTIMONIAL = 128;
-  var MOBILE_READ_MORE_LIMIT_PRODUCT_NOTES = 110;
-  var MOBILE_READ_MORE_LIMIT_STORY = 150;
-  var MOBILE_READ_MORE_LIMIT_WHY = 128;
-  var MOBILE_READ_MORE_LIMIT_DEFAULT = 138;
   var defaultProducts = Array.isArray(window.REBENHAUS_DEFAULT_PRODUCTS)
     ? window.REBENHAUS_DEFAULT_PRODUCTS.map(normalizeProduct)
     : [];
@@ -195,7 +170,6 @@
       '  <div class="product-img-wrap">',
       '    ' + imageMarkup,
       product.destaque ? '    <div class="product-badge' + badgeClass + '">' + escapeHtml(product.destaque) + '</div>' : '',
-      '    <div class="product-hover-cta">Curadoria boutique</div>',
       '  </div>',
       '  <div class="product-info">',
       '    <div class="product-meta-row">',
@@ -204,10 +178,13 @@
       '    </div>',
       '    <p class="product-subtitle">' + escapeHtml(product.subtitulo || '') + '</p>',
       '    <h3 class="product-name">' + escapeHtml(product.nome) + '</h3>',
-      '    <p class="product-notes">' + escapeHtml(product.descricao || '') + '</p>',
-      '    <div class="product-pairing">',
-      '      <span class="pairing-label">Harmonização</span>',
-      '      <span>' + escapeHtml(product.harmonizacao || '-') + '</span>',
+      '    <button type="button" class="product-details-toggle" aria-expanded="false">Ver detalhes</button>',
+      '    <div class="product-details-collapse">',
+      '      <p class="product-notes">' + escapeHtml(product.descricao || '') + '</p>',
+      '      <div class="product-pairing">',
+      '        <span class="pairing-label">Harmonização</span>',
+      '        <span>' + escapeHtml(product.harmonizacao || '-') + '</span>',
+      '      </div>',
       '    </div>',
       '    <div class="product-footer">',
       '      <div>',
@@ -225,10 +202,8 @@
     var grid = document.getElementById('productsGrid');
     if (!grid) return;
 
-    var featuredLimit = isMobileViewport() ? 2 : 4;
-    var featuredProducts = sortProducts(getActiveProducts()).slice(0, featuredLimit);
+    var featuredProducts = sortProducts(getActiveProducts()).slice(0, 4);
     grid.innerHTML = featuredProducts.map(buildProductCard).join('\n');
-    applyMobileReadMore(document);
   }
 
   function createProductsPageController() {
@@ -303,7 +278,6 @@
       emptyState.hidden = filteredProducts.length > 0;
       syncQuery();
       applyRevealAnimations();
-      applyMobileReadMore(document);
     }
 
     chips.addEventListener('click', function(event) {
@@ -351,7 +325,6 @@
   function renderAdminPage() {
     var mount = document.getElementById('adminRoot');
     if (!mount) return;
-
     mount.innerHTML = [
       '<main class="admin-shell">',
       '  <div class="admin-header">',
@@ -394,9 +367,7 @@
       '          <label class="admin-field"><span>Status</span><select id="productStatus" class="admin-input admin-select"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select></label>',
       '          <label class="admin-field admin-field-full"><span>Imagem (URL)</span><input id="productImagem" class="admin-input" placeholder="https://..."></label>',
       '          <label class="admin-field admin-field-full"><span>Imagem (upload)</span><input id="productImagemFile" class="admin-input admin-file" type="file" accept="image/*"></label>',
-      '          <div class="admin-image-preview-wrap admin-field-full">',
-      '            <div id="adminImagePreview" class="admin-image-preview">Prévia da imagem</div>',
-      '          </div>',
+      '          <div class="admin-image-preview-wrap admin-field-full"><div id="adminImagePreview" class="admin-image-preview">Prévia da imagem</div></div>',
       '          <div class="admin-form-actions admin-field-full">',
       '            <button type="submit" class="admin-button">Salvar produto</button>',
       '            <button id="cancelEditBtn" type="button" class="admin-button admin-button-secondary">Limpar</button>',
@@ -488,7 +459,7 @@
         return [
           '<article class="admin-list-item">',
           '  <div class="admin-list-media">',
-          product.imagem ? '    <img src="' + escapeHtml(product.imagem) + '" alt="' + escapeHtml(product.nome) + '" class="admin-product-thumb">' : '    <div class="admin-product-thumb admin-product-thumb-placeholder">Sem imagem</div>',
+          product.imagem ? '    <img src="' + escapeHtml(product.imagem) + '" alt="' + escapeHtml(product.nome) + '" class="admin-product-thumb">' : '    <div class="admin-product-thumb admin-product-thumb-empty"></div>',
           '  </div>',
           '  <div class="admin-list-content">',
           '    <div class="admin-list-top">',
@@ -740,77 +711,18 @@
     }
   }
 
-  function normalizeWhitespace(text) {
-    return String(text || '').replace(/\s+/g, ' ').trim();
-  }
+  function initMobileProductToggles() {
+    document.addEventListener('click', function(event) {
+      var button = event.target.closest('.product-details-toggle');
+      if (!button) return;
 
-  function buildCollapsedText(text, maxChars) {
-    var cleanText = normalizeWhitespace(text);
-    if (cleanText.length <= maxChars) return cleanText;
-    var trimmed = cleanText.slice(0, maxChars);
-    var lastSpace = trimmed.lastIndexOf(' ');
-    if (lastSpace > MOBILE_READ_MORE_MIN_CHAR_BOUNDARY) {
-      trimmed = trimmed.slice(0, lastSpace);
-    }
-    return trimmed + '…';
-  }
+      var card = button.closest('.product-card');
+      if (!card) return;
 
-  function getMobileReadMoreLimit(element) {
-    if (element.classList.contains('testimonial-text')) return MOBILE_READ_MORE_LIMIT_TESTIMONIAL;
-    if (element.classList.contains('product-notes')) return MOBILE_READ_MORE_LIMIT_PRODUCT_NOTES;
-    if (element.classList.contains('story-text')) return MOBILE_READ_MORE_LIMIT_STORY;
-    if (element.classList.contains('why-text')) return MOBILE_READ_MORE_LIMIT_WHY;
-    return MOBILE_READ_MORE_LIMIT_DEFAULT;
-  }
-
-  function isMobileViewport() {
-    return window.matchMedia('(max-width: ' + MOBILE_BREAKPOINT_PX + 'px)').matches;
-  }
-
-  function applyMobileReadMore(scope) {
-    if (!isMobileViewport()) return;
-    if (currentPage !== 'home' && currentPage !== 'produtos') return;
-
-    var root = scope || document;
-    var selector = MOBILE_READ_MORE_SELECTORS.join(',');
-    var candidates = root.querySelectorAll(selector);
-
-    Array.prototype.forEach.call(candidates, function(element) {
-      if (!element || element.dataset.mobileReadReady === '1') return;
-      // Preserve existing HTML-rich blocks by applying read-more only to plain-text nodes.
-      if (element.children && element.children.length > 0) return;
-
-      var originalText = normalizeWhitespace(element.textContent || '');
-      var maxChars = getMobileReadMoreLimit(element);
-      if (!originalText || originalText.length <= maxChars) return;
-
-      var collapsedText = buildCollapsedText(originalText, maxChars);
-      var button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'mobile-readmore-btn';
-      button.textContent = 'Ler mais';
-      button.setAttribute('aria-expanded', 'false');
-      button.setAttribute('aria-label', 'Expandir texto');
-
-      element.dataset.mobileReadReady = '1';
-      element.dataset.mobileReadOriginal = originalText;
-      element.dataset.mobileReadCollapsed = collapsedText;
-      updateReadMoreState(element, button, false);
-
-      button.addEventListener('click', function() {
-        var expanded = button.getAttribute('aria-expanded') === 'true';
-        updateReadMoreState(element, button, !expanded);
-      });
-
-      element.insertAdjacentElement('afterend', button);
+      var isExpanded = card.classList.toggle('is-expanded');
+      button.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+      button.textContent = isExpanded ? 'Ocultar detalhes' : 'Ver detalhes';
     });
-  }
-
-  function updateReadMoreState(element, button, isExpanded) {
-    element.textContent = isExpanded ? element.dataset.mobileReadOriginal : element.dataset.mobileReadCollapsed;
-    button.textContent = isExpanded ? 'Ler menos' : 'Ler mais';
-    button.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-    button.setAttribute('aria-label', isExpanded ? 'Recolher texto' : 'Expandir texto');
   }
 
   function init() {
@@ -818,6 +730,7 @@
     applyInternalLinks();
     initAgeGate();
     initNavScroll();
+    initMobileProductToggles();
 
     if (currentPage === 'admin') {
       renderAdminPage();
@@ -837,7 +750,6 @@
     });
 
     applyRevealAnimations();
-    applyMobileReadMore(document);
   }
 
   init();
