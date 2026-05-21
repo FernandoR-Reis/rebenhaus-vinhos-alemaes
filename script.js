@@ -17,6 +17,7 @@
     contato: 'contato/',
     admin: 'admin/'
   };
+  // Keep in sync with styles.css mobile media queries (max-width: 768px).
   var MOBILE_BREAKPOINT_PX = 768;
   // Intentional mix: direct classes and scoped descendants for blocks that do not expose dedicated text classes.
   var MOBILE_READ_MORE_SELECTORS = Object.freeze([
@@ -33,8 +34,13 @@
     '.products-institutional-card p',
     '.product-notes'
   ]);
-  // Avoid truncating too early in the sentence when the nearest word boundary appears too close to the start.
+  // 40 chars prevents awkwardly short previews while still preferring whole-word truncation.
   var MOBILE_READ_MORE_MIN_CHAR_BOUNDARY = 40;
+  var MOBILE_READ_MORE_LIMIT_TESTIMONIAL = 128;
+  var MOBILE_READ_MORE_LIMIT_PRODUCT_NOTES = 110;
+  var MOBILE_READ_MORE_LIMIT_STORY = 150;
+  var MOBILE_READ_MORE_LIMIT_WHY = 128;
+  var MOBILE_READ_MORE_LIMIT_DEFAULT = 138;
   var defaultProducts = Array.isArray(window.REBENHAUS_DEFAULT_PRODUCTS)
     ? window.REBENHAUS_DEFAULT_PRODUCTS.map(normalizeProduct)
     : [];
@@ -750,11 +756,11 @@
   }
 
   function getMobileReadMoreLimit(element) {
-    if (element.classList.contains('testimonial-text')) return 128;
-    if (element.classList.contains('product-notes')) return 110;
-    if (element.classList.contains('story-text')) return 150;
-    if (element.classList.contains('why-text')) return 128;
-    return 138;
+    if (element.classList.contains('testimonial-text')) return MOBILE_READ_MORE_LIMIT_TESTIMONIAL;
+    if (element.classList.contains('product-notes')) return MOBILE_READ_MORE_LIMIT_PRODUCT_NOTES;
+    if (element.classList.contains('story-text')) return MOBILE_READ_MORE_LIMIT_STORY;
+    if (element.classList.contains('why-text')) return MOBILE_READ_MORE_LIMIT_WHY;
+    return MOBILE_READ_MORE_LIMIT_DEFAULT;
   }
 
   function isMobileViewport() {
@@ -771,6 +777,7 @@
 
     Array.prototype.forEach.call(candidates, function(element) {
       if (!element || element.dataset.mobileReadReady === '1') return;
+      // Preserve existing HTML-rich blocks by applying read-more only to plain-text nodes.
       if (element.children && element.children.length > 0) return;
 
       var originalText = normalizeWhitespace(element.textContent || '');
