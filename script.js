@@ -17,6 +17,8 @@
     contato: 'contato/',
     admin: 'admin/'
   };
+  var MOBILE_BREAKPOINT_PX = 768;
+  // Intentional mix: direct classes and scoped descendants for blocks that do not expose dedicated text classes.
   var MOBILE_READ_MORE_SELECTORS = Object.freeze([
     '.hero-sub',
     '.section-desc',
@@ -31,6 +33,7 @@
     '.products-institutional-card p',
     '.product-notes'
   ]);
+  // Avoid truncating too early in the sentence when the nearest word boundary appears too close to the start.
   var MOBILE_READ_MORE_MIN_CHAR_BOUNDARY = 40;
   var defaultProducts = Array.isArray(window.REBENHAUS_DEFAULT_PRODUCTS)
     ? window.REBENHAUS_DEFAULT_PRODUCTS.map(normalizeProduct)
@@ -216,7 +219,7 @@
     var grid = document.getElementById('productsGrid');
     if (!grid) return;
 
-    var featuredLimit = window.matchMedia('(max-width: 768px)').matches ? 2 : 4;
+    var featuredLimit = isMobileViewport() ? 2 : 4;
     var featuredProducts = sortProducts(getActiveProducts()).slice(0, featuredLimit);
     grid.innerHTML = featuredProducts.map(buildProductCard).join('\n');
     applyMobileReadMore(document);
@@ -755,7 +758,7 @@
   }
 
   function applyMobileReadMore(scope) {
-    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    if (!isMobileViewport()) return;
     if (currentPage !== 'home' && currentPage !== 'produtos') return;
 
     var root = scope || document;
@@ -780,19 +783,19 @@
       element.dataset.mobileReadReady = '1';
       element.dataset.mobileReadOriginal = originalText;
       element.dataset.mobileReadCollapsed = collapsedText;
-      updateReadMoreState(element, button, false, originalText, collapsedText);
+      updateReadMoreState(element, button, false);
 
       button.addEventListener('click', function() {
         var expanded = button.getAttribute('aria-expanded') === 'true';
-        updateReadMoreState(element, button, !expanded, originalText, collapsedText);
+        updateReadMoreState(element, button, !expanded);
       });
 
       element.insertAdjacentElement('afterend', button);
     });
   }
 
-  function updateReadMoreState(element, button, isExpanded, originalText, collapsedText) {
-    element.textContent = isExpanded ? (element.dataset.mobileReadOriginal || originalText) : (element.dataset.mobileReadCollapsed || collapsedText);
+  function updateReadMoreState(element, button, isExpanded) {
+    element.textContent = isExpanded ? element.dataset.mobileReadOriginal : element.dataset.mobileReadCollapsed;
     button.textContent = isExpanded ? 'Ler menos' : 'Ler mais';
     button.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
     button.setAttribute('aria-label', isExpanded ? 'Recolher texto' : 'Expandir texto');
@@ -827,3 +830,6 @@
 
   init();
 })();
+  function isMobileViewport() {
+    return window.matchMedia('(max-width: ' + MOBILE_BREAKPOINT_PX + 'px)').matches;
+  }
