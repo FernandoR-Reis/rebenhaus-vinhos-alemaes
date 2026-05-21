@@ -102,6 +102,14 @@
     }
   }
 
+  function generateProductId(products) {
+    var id = '';
+    do {
+      id = 'produto-' + Date.now() + '-' + Math.floor(Math.random() * 100000);
+    } while (products.some(function(product) { return product.id === id; }));
+    return id;
+  }
+
   function seedProductsIfNeeded() {
     if (!getStoredProducts()) {
       saveProducts(defaultProducts);
@@ -348,7 +356,7 @@
       if (file.size > MAX_IMAGE_SIZE_BYTES) {
         uploadedImageData = '';
         imagemFileEl.value = '';
-        window.alert('Imagem muito grande. Limite: 2MB.');
+        window.alert('Imagem muito grande. Limite: ' + (MAX_IMAGE_SIZE_BYTES / (1024 * 1024)) + 'MB.');
         return;
       }
 
@@ -368,7 +376,7 @@
       });
 
       var nextProduct = {
-        id: idEl.value || ('produto-' + Date.now()),
+        id: idEl.value || generateProductId(products),
         nome: nomeEl.value.trim(),
         subtitulo: subtituloEl.value.trim(),
         descricao: descricaoEl.value.trim(),
