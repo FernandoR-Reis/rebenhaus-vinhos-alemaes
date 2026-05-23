@@ -1,8 +1,8 @@
 (function() {
   // v2 isolates the current boutique collection schema from older local data used before the dedicated /produtos and /admin pages.
   var STORAGE_KEY_PRODUCTS = 'rebenhaus_products_v2';
-  var STORAGE_KEY_ADMIN_AUTH = 'rebenhaus_admin_auth_v1';
-  var ADMIN_PASSWORD = '0812';
+  var SUPABASE_TABLE_PRODUCTS = 'products';
+  var SUPABASE_TABLE_PROFILES = 'profiles';
   var MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
   var WHATSAPP_NUMBER = '5512974019009';
   var GOLD_BADGE_PATTERN = /popular|curadoria|editorial/i;
@@ -45,6 +45,7 @@
     ? window.REBENHAUS_DEFAULT_PRODUCTS.map(normalizeProduct)
     : [];
   var productsPageController = null;
+  var cloudHydrationPromise = null;
 
   function normalizeProduct(product) {
     var normalized = product || {};
@@ -129,8 +130,87 @@
     }
   }
 
+  function getSupabaseState() {
+    return window.REBENHAUS_SUPABASE || {
+      enabled: false,
+      client: null,
+      error: ''
+    };
+  }
+
+  function isSupabaseReady() {
+    var state = getSupabaseState();
+    return Boolean(state.enabled && state.client);
+  }
+
+  function getSupabaseClient() {
+    var state = getSupabaseState();
+    return state.client || null;
+  }
+
+  function waitForSupabaseInitialization(timeoutMs) {
+    var timeout = Math.max(0, Number(timeoutMs) || 0);
+    if (isSupabaseReady()) return Promise.resolve(true);
+
+    return new Promise(function(resolve) {
+      var settled = false;
+      var timer = null;
+
+      function done(value) {
+        if (settled) return;
+        settled = true;
+        window.removeEventListener('rebenhaus:supabase-ready', onReady);
+        window.removeEventListener('rebenhaus:supabase-error', onError);
+        if (timer) {
+          window.clearTimeout(timer);
+        }
+        resolve(value);
+      }
+
+      function onReady() {
+        done(true);
+      }
+
+      function onError() {
+        done(false);
+      }
+
+      window.addEventListener('rebenhaus:supabase-ready', onReady);
+      window.addEventListener('rebenhaus:supabase-error', onError);
+      if (timeout > 0) {
+        timer = window.setTimeout(function() {
+          done(false);
+        }, timeout);
+      }
+    });
+  }
+
+  function readProductsFromSupabase() {
+    if (!isSupabaseReady()) {
+      return Promise.resolve(null);
+    }
+
+    return getSupabaseClient()
+      .from(SUPABASE_TABLE_PRODUCTS)
+      .select('*')
+      .order('created_at', { ascending: false })
+      .then(function(response) {
+        if (response.error || !Array.isArray(response.data)) {
+          return null;
+        }
+        return response.data.map(normalizeProduct);
+      })
+      .catch(function() {
+        return null;
+      });
+  }
+
   function saveProducts(products) {
     localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(products.map(normalizeProduct)));
+  }
+
+  function replaceStoredProducts(products) {
+    saveProducts(Array.isArray(products) ? products : []);
   }
 
   function saveProductsSafely(products) {
@@ -143,10 +223,221 @@
     }
   }
 
+  function getSupabaseUser() {
+    if (!isSupabaseReady()) {
+      return Promise.resolve(null);
+    }
+
+    return getSupabaseClient().auth.getUser()
+      .then(function(response) {
+        if (response.error) return null;
+        return response.data && response.data.user ? response.data.user : null;
+      })
+      .catch(function() {
+        return null;
+      });
+  }
+
+  function getCurrentProfile() {
+    if (!isSupabaseReady()) {
+      return Promise.resolve(null);
+    }
+
+    return getSupabaseUser().then(function(user) {
+      if (!user || !user.id) return null;
+      return getSupabaseClient()
+        .from(SUPABASE_TABLE_PROFILES)
+        .select('id, role')
+        .eq('id', user.id)
+        .maybeSingle()
+        .then(function(response) {
+          if (response.error) return null;
+          return response.data || null;
+        })
+        .catch(function() {
+          return null;
+        });
+    });
+  }
+
+  function isAdminProfile(profile) {
+    return Boolean(profile && String(profile.role || '').toLowerCase() === 'admin');
+  }
+
+  function hasActiveAdminSession() {
+    return waitForSupabaseInitialization(4000)
+      .then(function(isReady) {
+        if (!isReady || !isSupabaseReady()) return false;
+        return getCurrentProfile().then(function(profile) {
+          return isAdminProfile(profile);
+        });
+      })
+      .catch(function() {
+        return false;
+      });
+  }
+
+  function signInAdmin(email, password) {
+    return waitForSupabaseInitialization(4000)
+      .then(function(isReady) {
+        if (!isReady || !isSupabaseReady()) {
+          throw new Error('Supabase não está configurado neste ambiente.');
+        }
+
+        return getSupabaseClient().auth.signInWithPassword({
+          email: email,
+          password: password
+        }).then(function(response) {
+          if (response.error) {
+            throw response.error;
+          }
+
+          return getCurrentProfile().then(function(profile) {
+            if (!isAdminProfile(profile)) {
+              return getSupabaseClient().auth.signOut().then(function() {
+                throw new Error('Acesso permitido apenas para administradores.');
+              });
+            }
+
+            return response.data;
+          });
+        });
+      });
+  }
+
+  function signOutAdmin() {
+    if (!isSupabaseReady()) {
+      return Promise.resolve();
+    }
+
+    return getSupabaseClient().auth.signOut().then(function() {
+      return undefined;
+    }).catch(function() {
+      return undefined;
+    });
+  }
+
+  function normalizeStatus(status) {
+    var normalizedStatus = String(status || '').trim().toLowerCase();
+    if (normalizedStatus !== 'ativo' && normalizedStatus !== 'inativo') {
+      throw new Error('Status inválido.');
+    }
+    return normalizedStatus;
+  }
+
+  function parsePrecoNumber(precoInput) {
+    var value = typeof precoInput === 'number'
+      ? precoInput
+      : Number(String(precoInput || '').replace(',', '.'));
+    if (Number.isNaN(value)) {
+      throw new Error('Preço inválido.');
+    }
+    return value;
+  }
+
+  function parseEstoqueInt(estoqueInput) {
+    var value = typeof estoqueInput === 'number'
+      ? estoqueInput
+      : parseInt(String(estoqueInput || ''), 10);
+    if (!Number.isFinite(value)) {
+      throw new Error('Estoque inválido.');
+    }
+    return value;
+  }
+
+  function createSupabaseProduct(product) {
+    if (!isSupabaseReady()) {
+      return Promise.reject(new Error('Supabase não está configurado neste ambiente.'));
+    }
+
+    return getSupabaseClient()
+      .from(SUPABASE_TABLE_PRODUCTS)
+      .insert(normalizeProduct(product))
+      .select('*')
+      .then(function(response) {
+        if (response.error) {
+          throw response.error;
+        }
+        return Array.isArray(response.data) && response.data[0]
+          ? normalizeProduct(response.data[0])
+          : null;
+      });
+  }
+
+  function updateSupabaseProduct(id, updates) {
+    if (!isSupabaseReady()) {
+      return Promise.reject(new Error('Supabase não está configurado neste ambiente.'));
+    }
+
+    return getSupabaseClient()
+      .from(SUPABASE_TABLE_PRODUCTS)
+      .update(normalizeProduct(Object.assign({ id: id }, updates)))
+      .eq('id', id)
+      .select('*')
+      .then(function(response) {
+        if (response.error) {
+          throw response.error;
+        }
+        return Array.isArray(response.data) && response.data[0]
+          ? normalizeProduct(response.data[0])
+          : null;
+      });
+  }
+
+  function deleteSupabaseProduct(id) {
+    if (!isSupabaseReady()) {
+      return Promise.reject(new Error('Supabase não está configurado neste ambiente.'));
+    }
+
+    return getSupabaseClient()
+      .from(SUPABASE_TABLE_PRODUCTS)
+      .delete()
+      .eq('id', id)
+      .select('id')
+      .then(function(response) {
+        if (response.error) {
+          throw response.error;
+        }
+        return true;
+      });
+  }
+
   function seedProductsIfNeeded() {
     if (!getStoredProducts() && defaultProducts.length) {
       saveProducts(defaultProducts);
     }
+  }
+
+  function hydrateProductsFromCloud() {
+    if (cloudHydrationPromise) return cloudHydrationPromise;
+
+    cloudHydrationPromise = waitForSupabaseInitialization(4000)
+      .then(function(isReady) {
+        var localProducts = getStoredProducts();
+        if (!isReady || !isSupabaseReady()) return false;
+
+        return readProductsFromSupabase().then(function(remoteProducts) {
+          if (Array.isArray(remoteProducts)) {
+            var remoteSerialized = JSON.stringify(remoteProducts);
+            var localSerialized = JSON.stringify((localProducts || []).map(normalizeProduct));
+            if (remoteSerialized !== localSerialized) {
+              replaceStoredProducts(remoteProducts);
+              return true;
+            }
+            return false;
+          }
+
+          return false;
+        });
+      })
+      .catch(function() {
+        return false;
+      })
+      .finally(function() {
+        cloudHydrationPromise = null;
+      });
+
+    return cloudHydrationPromise;
   }
 
   function getProducts() {
@@ -358,7 +649,7 @@
       '    <div>',
       '      <span class="section-label">Área reservada</span>',
       '      <h1 class="admin-title">Dashboard de Produtos</h1>',
-      '      <p class="admin-subtitle">Gerencie a coleção exibida em <strong>/produtos</strong> com persistência local e atualização automática.</p>',
+      '      <p class="admin-subtitle">Gerencie a coleção exibida em <strong>/produtos</strong> com persistência em nuvem e atualização automática.</p>',
       '    </div>',
       '    <div class="admin-actions-top">',
       '      <a class="admin-link" href="' + escapeHtml(getRouteHref('produtos')) + '">Abrir vitrine</a>',
@@ -367,12 +658,13 @@
       '  </div>',
       '  <section id="adminLogin" class="admin-login" style="display:none;">',
       '    <h2>Acesso oculto</h2>',
-      '    <p>Digite a senha para administrar a coleção boutique.</p>',
+      '    <p>Entre com seu usuário administrador do Supabase para gerenciar a coleção boutique.</p>',
       '    <form id="adminLoginForm" class="admin-login-form">',
+      '      <input id="adminEmail" type="email" class="admin-input" placeholder="E-mail" required>',
       '      <input id="adminPassword" type="password" class="admin-input" placeholder="Senha" required>',
       '      <button type="submit" class="admin-button">Entrar</button>',
       '    </form>',
-      '    <p id="adminLoginError" class="admin-login-error" style="display:none;">Senha inválida.</p>',
+      '    <p id="adminLoginError" class="admin-login-error" style="display:none;">Credenciais inválidas.</p>',
       '  </section>',
       '  <div id="adminApp" style="display:none;">',
       '    <div class="admin-grid">',
@@ -421,6 +713,8 @@
     var loginEl = document.getElementById('adminLogin');
     var appEl = document.getElementById('adminApp');
     var loginErrorEl = document.getElementById('adminLoginError');
+    var loginEmailEl = document.getElementById('adminEmail');
+    var loginPasswordEl = document.getElementById('adminPassword');
     var listEl = document.getElementById('productsAdminList');
     var countEl = document.getElementById('adminCount');
     var formEl = document.getElementById('productForm');
@@ -442,18 +736,6 @@
     var newProductBtn = document.getElementById('adminNewProductBtn');
     var uploadedImageData = '';
 
-    function isAuthenticated() {
-      return sessionStorage.getItem(STORAGE_KEY_ADMIN_AUTH) === '1';
-    }
-
-    function setAuthenticated(value) {
-      if (value) {
-        sessionStorage.setItem(STORAGE_KEY_ADMIN_AUTH, '1');
-      } else {
-        sessionStorage.removeItem(STORAGE_KEY_ADMIN_AUTH);
-      }
-    }
-
     function updatePreview(value) {
       if (value) {
         previewEl.innerHTML = '<img src="' + escapeHtml(value) + '" alt="Prévia do produto">';
@@ -470,9 +752,59 @@
       updatePreview('');
     }
 
-    function safeParseNumber(value, fallback) {
-      var number = Number(value);
-      return Number.isFinite(number) ? number : fallback;
+    function setLoginError(message) {
+      if (!message) {
+        loginErrorEl.style.display = 'none';
+        loginErrorEl.textContent = 'Credenciais inválidas.';
+        return;
+      }
+      loginErrorEl.textContent = message;
+      loginErrorEl.style.display = 'block';
+    }
+
+    function buildProductPayload() {
+      var products = getProducts();
+      var nextId = String(idEl.value || generateProductId(products)).trim();
+      if (!nextId) {
+        throw new Error('ID do produto é obrigatório.');
+      }
+
+      return normalizeProduct({
+        id: nextId,
+        nome: nomeEl.value.trim(),
+        subtitulo: subtituloEl.value.trim(),
+        descricao: descricaoEl.value.trim(),
+        categoria: categoriaEl.value.trim(),
+        harmonizacao: harmonizacaoEl.value.trim(),
+        preco: parsePrecoNumber(precoEl.value),
+        imagem: uploadedImageData || imagemEl.value.trim(),
+        destaque: destaqueEl.value.trim(),
+        estoque: Math.max(0, parseEstoqueInt(estoqueEl.value)),
+        status: normalizeStatus(statusEl.value)
+      });
+    }
+
+    function mergeProductLocally(product) {
+      var products = getProducts();
+      var exists = products.some(function(item) {
+        return item.id === product.id;
+      });
+      var nextProducts = exists
+        ? products.map(function(item) {
+            return item.id === product.id ? normalizeProduct(product) : item;
+          })
+        : [normalizeProduct(product)].concat(products);
+
+      saveProductsSafely(nextProducts);
+      return nextProducts;
+    }
+
+    function removeProductLocally(productId) {
+      var nextProducts = getProducts().filter(function(product) {
+        return product.id !== productId;
+      });
+      saveProductsSafely(nextProducts);
+      return nextProducts;
     }
 
     function renderList() {
@@ -516,6 +848,7 @@
     }
 
     function showApp() {
+      setLoginError('');
       loginEl.style.display = 'none';
       appEl.style.display = 'block';
       renderList();
@@ -525,23 +858,31 @@
     function showLogin() {
       appEl.style.display = 'none';
       loginEl.style.display = 'block';
+      resetForm();
     }
 
     document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
       event.preventDefault();
-      var typedPassword = document.getElementById('adminPassword').value;
-      if (typedPassword === ADMIN_PASSWORD) {
-        setAuthenticated(true);
-        loginErrorEl.style.display = 'none';
-        showApp();
-      } else {
-        loginErrorEl.style.display = 'block';
-      }
+      setLoginError('');
+      signInAdmin(String(loginEmailEl.value || '').trim(), String(loginPasswordEl.value || ''))
+        .then(function() {
+          return hydrateProductsFromCloud();
+        })
+        .then(function() {
+          renderList();
+          loginPasswordEl.value = '';
+          showApp();
+        })
+        .catch(function(error) {
+          setLoginError(error && error.message ? error.message : 'Não foi possível entrar.');
+        });
     });
 
     logoutBtn.addEventListener('click', function() {
-      setAuthenticated(false);
-      showLogin();
+      signOutAdmin().finally(function() {
+        loginPasswordEl.value = '';
+        showLogin();
+      });
     });
 
     newProductBtn.addEventListener('click', function() {
@@ -588,34 +929,32 @@
     formEl.addEventListener('submit', function(event) {
       event.preventDefault();
 
-      var products = getProducts();
-      var existing = products.find(function(product) {
+      var existingProduct = getProducts().find(function(product) {
         return product.id === idEl.value;
       });
 
-      var nextProduct = normalizeProduct({
-        id: idEl.value || generateProductId(products),
-        nome: nomeEl.value.trim(),
-        subtitulo: subtituloEl.value.trim(),
-        descricao: descricaoEl.value.trim(),
-        categoria: categoriaEl.value.trim(),
-        harmonizacao: harmonizacaoEl.value.trim(),
-        preco: safeParseNumber(precoEl.value, 0),
-        imagem: uploadedImageData || imagemEl.value.trim() || (existing ? existing.imagem : ''),
-        destaque: destaqueEl.value.trim(),
-        estoque: Math.max(0, parseInt(estoqueEl.value, 10) || 0),
-        status: statusEl.value === 'inativo' ? 'inativo' : 'ativo'
+      var payload;
+      try {
+        payload = buildProductPayload();
+        if (!payload.imagem && existingProduct && existingProduct.imagem) {
+          payload.imagem = existingProduct.imagem;
+        }
+      } catch (error) {
+        window.alert(error && error.message ? error.message : 'Revise os campos do produto.');
+        return;
+      }
+
+      var request = existingProduct
+        ? updateSupabaseProduct(payload.id, payload)
+        : createSupabaseProduct(payload);
+
+      request.then(function(savedProduct) {
+        mergeProductLocally(savedProduct || payload);
+        renderList();
+        resetForm();
+      }).catch(function(error) {
+        window.alert(error && error.message ? error.message : 'Não foi possível salvar o produto no Supabase.');
       });
-
-      var updatedProducts = existing
-        ? products.map(function(product) {
-            return product.id === nextProduct.id ? nextProduct : product;
-          })
-        : [nextProduct].concat(products);
-
-      if (!saveProductsSafely(updatedProducts)) return;
-      renderList();
-      resetForm();
     });
 
     listEl.addEventListener('click', function(event) {
@@ -631,24 +970,30 @@
       if (!targetProduct) return;
 
       if (action === 'remove') {
-        var nextProducts = products.filter(function(product) {
-          return product.id !== productId;
-        });
-        if (!saveProductsSafely(nextProducts)) return;
-        renderList();
-        if (idEl.value === productId) resetForm();
+        deleteSupabaseProduct(productId)
+          .then(function() {
+            removeProductLocally(productId);
+            renderList();
+            if (idEl.value === productId) resetForm();
+          })
+          .catch(function(error) {
+            window.alert(error && error.message ? error.message : 'Não foi possível remover o produto.');
+          });
         return;
       }
 
       if (action === 'toggle') {
-        var toggledProducts = products.map(function(product) {
-          if (product.id !== productId) return product;
-          return normalizeProduct(Object.assign({}, product, {
-            status: product.status === 'ativo' ? 'inativo' : 'ativo'
-          }));
-        });
-        if (!saveProductsSafely(toggledProducts)) return;
-        renderList();
+        var toggledProduct = normalizeProduct(Object.assign({}, targetProduct, {
+          status: targetProduct.status === 'ativo' ? 'inativo' : 'ativo'
+        }));
+        updateSupabaseProduct(productId, toggledProduct)
+          .then(function(savedProduct) {
+            mergeProductLocally(savedProduct || toggledProduct);
+            renderList();
+          })
+          .catch(function(error) {
+            window.alert(error && error.message ? error.message : 'Não foi possível atualizar o status.');
+          });
         return;
       }
 
@@ -670,11 +1015,16 @@
       }
     });
 
-    if (isAuthenticated()) {
-      showApp();
-    } else {
-      showLogin();
-    }
+    hasActiveAdminSession().then(function(isAdmin) {
+      if (isAdmin) {
+        hydrateProductsFromCloud().then(function() {
+          renderList();
+          showApp();
+        });
+      } else {
+        showLogin();
+      }
+    });
   }
 
   function applyRevealAnimations() {
@@ -834,6 +1184,30 @@
       } else if (currentPage === 'home') {
         renderHomeProducts();
       }
+    });
+
+    function rerenderCurrentPage() {
+      if (currentPage === 'produtos') {
+        renderProductsPage();
+      } else if (currentPage === 'home') {
+        renderHomeProducts();
+      } else if (currentPage === 'admin') {
+        renderAdminPage();
+      }
+    }
+
+    hydrateProductsFromCloud().then(function(changed) {
+      if (changed) {
+        rerenderCurrentPage();
+      }
+    });
+
+    window.addEventListener('rebenhaus:supabase-ready', function() {
+      hydrateProductsFromCloud().then(function(changed) {
+        if (changed) {
+          rerenderCurrentPage();
+        }
+      });
     });
 
     applyRevealAnimations();

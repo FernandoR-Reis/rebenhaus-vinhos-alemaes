@@ -17,7 +17,7 @@ A experiência inclui:
 - seções institucionais
 - vitrine dinâmica de produtos
 - página dedicada /produtos com filtros editoriais
-- área administrativa oculta em /admin com persistência em localStorage
+- área administrativa oculta em /admin com Supabase Auth + persistência em Supabase (fallback local para vitrine)
 - depoimentos
 - newsletter
 - CTA para WhatsApp e navegação interna
@@ -34,6 +34,25 @@ A experiência inclui:
 Basta abrir o arquivo [index.html](index.html) no navegador. As páginas internas também funcionam abrindo os arquivos em `/produtos`, `/admin`, `/sobre`, `/experiencia` e `/contato`.
 
 Se preferir usar um servidor local simples, utilize qualquer extensão de Live Server no VS Code ou sirva a pasta com sua ferramenta de preferência.
+
+## Configuração do Supabase
+
+O projeto já está preparado para salvar e ler os produtos na nuvem via Supabase.
+
+1. no Supabase, crie um projeto
+2. abra o SQL Editor e execute o script [supabase/setup.sql](supabase/setup.sql)
+3. em Authentication, crie o usuário administrador com e-mail e senha
+4. copie o `id` desse usuário em `auth.users`
+5. execute no SQL Editor: `update public.profiles set role = 'admin' where id = '<USER_UUID>';`
+6. a configuração padrão já está definida em [supabase-config.js](supabase-config.js) para o ambiente atual
+7. em produção, prefira injetar `window.REBENHAUS_SUPABASE_CONFIG = { url: '...', anonKey: '...' }` antes de carregar [supabase-config.js](supabase-config.js), para evitar versionar valores de ambiente diretamente no código
+8. publique/recarregue o site
+
+Se o Supabase estiver indisponível ou não inicializar, o site continua funcionando com fallback em localStorage.
+
+### Observação de segurança
+
+O script [supabase/setup.sql](supabase/setup.sql) libera leitura pública da vitrine, mas restringe `insert`, `update` e `delete` para usuários autenticados com `profiles.role = 'admin'`.
 
 ## Publicação
 
