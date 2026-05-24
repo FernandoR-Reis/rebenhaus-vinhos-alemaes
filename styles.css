@@ -267,7 +267,7 @@ body.mobile-nav-open {
   object-fit: cover;
   object-position: center right;
   display: block;
-  filter: saturate(0.82) brightness(0.56);
+  filter: saturate(0.86) brightness(0.68);
   transform: scale(1.01);
 }
 
@@ -275,8 +275,8 @@ body.mobile-nav-open {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(10,9,8,0.82) 0%, rgba(10,9,8,0.62) 34%, rgba(10,9,8,0.28) 68%, rgba(10,9,8,0.14) 100%),
-    linear-gradient(180deg, rgba(8,7,6,0.12) 0%, rgba(8,7,6,0.72) 100%);
+    linear-gradient(90deg, rgba(10,9,8,0.72) 0%, rgba(10,9,8,0.52) 34%, rgba(10,9,8,0.2) 68%, rgba(10,9,8,0.08) 100%),
+    linear-gradient(180deg, rgba(8,7,6,0.08) 0%, rgba(8,7,6,0.58) 100%);
   z-index: 1;
 }
 
@@ -390,13 +390,13 @@ body.mobile-nav-open {
 @media (max-width: 900px) {
   .hero-media img {
     object-position: 62% center;
-    filter: saturate(0.82) brightness(0.5);
+    filter: saturate(0.86) brightness(0.62);
   }
 
   .hero-bg {
     background:
-      linear-gradient(180deg, rgba(10,9,8,0.5) 0%, rgba(10,9,8,0.78) 100%),
-      linear-gradient(90deg, rgba(10,9,8,0.48) 0%, rgba(10,9,8,0.22) 60%, rgba(10,9,8,0.12) 100%);
+      linear-gradient(180deg, rgba(10,9,8,0.38) 0%, rgba(10,9,8,0.68) 100%),
+      linear-gradient(90deg, rgba(10,9,8,0.36) 0%, rgba(10,9,8,0.18) 60%, rgba(10,9,8,0.08) 100%);
   }
 
   .hero-content {
@@ -1601,7 +1601,7 @@ body.mobile-nav-open {
 .page-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(14,12,10,0.28) 0%, rgba(14,12,10,0.86) 82%);
+  background: linear-gradient(180deg, rgba(14,12,10,0.2) 0%, rgba(14,12,10,0.74) 82%);
 }
 
 .page-hero-content {
