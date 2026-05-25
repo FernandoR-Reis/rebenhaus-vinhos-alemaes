@@ -19,8 +19,8 @@
   };
   // Keep in sync with styles.css mobile media queries (max-width: 768px).
   var MOBILE_BREAKPOINT_PX = 768;
-  // Keep in sync with the collapsed navigation media query in styles.css (max-width: 900px).
-  var NAV_COLLAPSE_BREAKPOINT_PX = 900;
+  // Keep in sync with the collapsed navigation media query in styles.css (max-width: 949px).
+  var NAV_COLLAPSE_BREAKPOINT_PX = 949;
   // Intentional mix: direct classes and scoped descendants for blocks that do not expose dedicated text classes.
   var MOBILE_READ_MORE_SELECTORS = Object.freeze([
     '.hero-sub',
@@ -92,16 +92,37 @@
     return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(message);
   }
 
+  function getActiveRouteForCurrentLocation() {
+    if (currentPage !== 'home') {
+      return currentPage;
+    }
+
+    var hash = String(window.location.hash || '').toLowerCase();
+    if (hash === '#sobre') return 'sobre';
+    if (hash === '#experiencia') return 'experiencia';
+    if (hash === '#contato') return 'contato';
+    return 'home';
+  }
+
+  function applyActiveRouteState() {
+    var activeRoute = getActiveRouteForCurrentLocation();
+    var routeLinks = document.querySelectorAll('[data-route]');
+    Array.prototype.forEach.call(routeLinks, function(link) {
+      var routeName = link.getAttribute('data-route');
+      if (!routeName) return;
+      link.classList.toggle('is-active', routeName === activeRoute);
+    });
+  }
+
   function applyInternalLinks() {
     var routeLinks = document.querySelectorAll('[data-route]');
     Array.prototype.forEach.call(routeLinks, function(link) {
       var routeName = link.getAttribute('data-route');
       if (!routeName) return;
       link.setAttribute('href', getRouteHref(routeName));
-      if (routeName === currentPage) {
-        link.classList.add('is-active');
-      }
     });
+
+    applyActiveRouteState();
 
     var productLinks = document.querySelectorAll('[data-products-category]');
     Array.prototype.forEach.call(productLinks, function(link) {
@@ -119,6 +140,10 @@
       link.setAttribute('target', '_blank');
       link.setAttribute('rel', 'noopener noreferrer');
     });
+
+    if (currentPage === 'home') {
+      window.addEventListener('hashchange', applyActiveRouteState);
+    }
   }
 
   function getStoredProducts() {
@@ -484,7 +509,7 @@
       : '<div class="product-img-placeholder"><div class="css-bottle"><div class="css-bottle-neck"></div><div class="css-bottle-shoulder"></div><div class="css-bottle-body"></div></div></div>';
 
     return [
-      '<article class="product-card" data-anim data-anim-delay="' + String((index % 4) + 1) + '">',
+      '<article class="product-card" data-product-id="' + escapeHtml(product.id || '') + '" data-anim data-anim-delay="' + String((index % 4) + 1) + '">',
       '  <div class="product-img-wrap">',
       '    ' + imageMarkup,
       product.destaque ? '    <div class="product-badge' + badgeClass + '">' + escapeHtml(product.destaque) + '</div>' : '',
@@ -536,12 +561,92 @@
     var resultLabel = document.getElementById('productsResultLabel');
     var emptyState = document.getElementById('productsEmpty');
     var initialCategory = new URLSearchParams(window.location.search).get('categoria') || 'Todos';
+    var focusModal = null;
+    var focusContent = null;
     var state = {
       category: initialCategory,
       search: '',
       availability: 'todos',
-      featuredOnly: false
+      featuredOnly: false,
+      focusedProductId: null
     };
+
+    function ensureFocusModal() {
+      if (focusModal && focusContent) return;
+
+      focusModal = document.createElement('div');
+      focusModal.className = 'product-focus-modal';
+      focusModal.setAttribute('aria-hidden', 'true');
+      focusModal.innerHTML = [
+        '<div class="product-focus-backdrop"></div>',
+        '<div class="product-focus-dialog" role="dialog" aria-modal="true" aria-label="Detalhes do vinho">',
+        '  <button type="button" class="product-focus-close" aria-label="Fechar visualização">Fechar</button>',
+        '  <div class="product-focus-content"></div>',
+        '</div>'
+      ].join('');
+
+      document.body.appendChild(focusModal);
+      focusContent = focusModal.querySelector('.product-focus-content');
+
+      focusModal.addEventListener('click', function(event) {
+        if (event.target.closest('.product-focus-close') || event.target.classList.contains('product-focus-backdrop')) {
+          closeProductFocusModal();
+        }
+      });
+
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          closeProductFocusModal();
+        }
+      });
+    }
+
+    function closeProductFocusModal() {
+      if (!focusModal || !focusModal.classList.contains('is-open')) return;
+      state.focusedProductId = null;
+      focusModal.classList.remove('is-open');
+      focusModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('product-focus-open');
+      if (focusContent) {
+        focusContent.innerHTML = '';
+      }
+    }
+
+    function openProductFocusModal(card, productId) {
+      ensureFocusModal();
+      if (!focusModal || !focusContent || !card) return;
+
+      var cardClone = card.cloneNode(true);
+      cardClone.classList.remove('is-expanded', 'is-dimmed', 'visible');
+      cardClone.classList.add('is-focus-clone');
+      cardClone.removeAttribute('data-anim');
+      cardClone.removeAttribute('data-anim-delay');
+
+      var animatedChildren = cardClone.querySelectorAll('[data-anim]');
+      Array.prototype.forEach.call(animatedChildren, function(element) {
+        element.removeAttribute('data-anim');
+        element.removeAttribute('data-anim-delay');
+        element.classList.add('visible');
+      });
+
+      focusContent.innerHTML = '';
+      focusContent.appendChild(cardClone);
+
+      state.focusedProductId = productId;
+      focusModal.classList.add('is-open');
+      focusModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('product-focus-open');
+    }
+
+    function syncFocusedProductWithResults(filteredProducts) {
+      if (!state.focusedProductId) return;
+      var existsInResults = filteredProducts.some(function(product) {
+        return String(product.id || '') === state.focusedProductId;
+      });
+      if (!existsInResults) {
+        closeProductFocusModal();
+      }
+    }
 
     function getCategories(products) {
       var map = {};
@@ -589,6 +694,7 @@
     function render() {
       var activeProducts = getActiveProducts();
       var filteredProducts = getFilteredProducts();
+      syncFocusedProductWithResults(filteredProducts);
       renderCategoryFilters(activeProducts);
       resultCount.textContent = String(filteredProducts.length);
       resultLabel.textContent = filteredProducts.length === 1 ? 'rótulo disponível na coleção' : 'rótulos disponíveis na coleção';
@@ -598,6 +704,23 @@
       applyRevealAnimations();
       applyMobileReadMore(document);
     }
+
+    grid.addEventListener('click', function(event) {
+      var interactiveTarget = event.target.closest('a, button, input, select, textarea, label');
+      if (interactiveTarget) return;
+
+      var card = event.target.closest('.product-card');
+      if (!card || !grid.contains(card)) return;
+
+      var productId = card.getAttribute('data-product-id') || '';
+      if (!productId) return;
+
+      if (state.focusedProductId === productId && focusModal && focusModal.classList.contains('is-open')) {
+        closeProductFocusModal();
+      } else {
+        openProductFocusModal(card, productId);
+      }
+    });
 
     chips.addEventListener('click', function(event) {
       var button = event.target.closest('button[data-category]');

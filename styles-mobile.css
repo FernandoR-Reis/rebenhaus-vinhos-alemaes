@@ -216,6 +216,34 @@
     display: none;
   }
 
+  body[data-page="produtos"] .products-grid-editorial .product-card.is-expanded .product-pairing,
+  body[data-page="produtos"] .products-grid-editorial .product-card.is-expanded .product-price-pix {
+    display: flex;
+  }
+
+  body[data-page="produtos"] .products-grid-editorial .product-card.is-expanded .product-price-pix {
+    display: block;
+    margin-top: 8px;
+  }
+
+  body[data-page="produtos"] .products-grid-editorial.has-expanded-card .product-card.is-dimmed {
+    opacity: 0.76;
+    filter: saturate(0.86);
+  }
+
+  body[data-page="produtos"] .products-grid-editorial .product-card.is-expanded .product-info {
+    padding: 26px 22px 24px;
+  }
+
+  body[data-page="produtos"] .products-grid-editorial .product-card.is-expanded .product-name {
+    font-size: 22px;
+  }
+
+  body[data-page="produtos"] .products-grid-editorial .product-card.is-expanded .product-notes {
+    font-size: 13px;
+    line-height: 1.82;
+  }
+
   body[data-page="produtos"] .product-info,
   body[data-page="home"] .product-info {
     padding: 22px 20px;
